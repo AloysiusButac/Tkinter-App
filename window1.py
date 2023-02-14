@@ -52,21 +52,12 @@ class Window1():
         ## Load image on each canvas
         self.img1 = ImageTk.PhotoImage(Image.open("video.png").resize([280, 280], Image.BILINEAR))
         self.img1_large = ImageTk.PhotoImage(Image.open("video.png").resize([560, 560], Image.BILINEAR))
-        ## Add image on each canvas
-        self.display_frame.update()
-        self.canvas1_wh = [self.canv1.winfo_width(), self.canv1.winfo_height()]
-        self.canvas2_wh = [self.canv2.winfo_width(), self.canv2.winfo_height()]
-        self.canvas3_wh = [self.canv3.winfo_width(), self.canv3.winfo_height()]
-        self.canvas4_wh = [self.canv4.winfo_width(), self.canv4.winfo_height()]
-        print(self.canvas1_wh[0], self.canvas1_wh[1])
-        print(self.canvas2_wh[0], self.canvas2_wh[1])
-        print(self.canvas3_wh[0], self.canvas3_wh[1])
-        print(self.canvas4_wh[0], self.canvas4_wh[1])
 
-        self.canv1.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c1Stream")
-        self.canv2.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c2Stream")
-        self.canv3.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c3Stream")
-        self.canv4.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c4Stream")
+        ## Add image on each canvas
+        # self.canv1.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c1Stream")
+        # self.canv2.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c2Stream")
+        # self.canv3.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c3Stream")
+        # self.canv4.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c4Stream")
 
         # Large display setup
         self.canv_big = tk.Canvas(self.display_frame_large, width=650, height=420, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
@@ -87,6 +78,16 @@ class Window1():
         self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
         self.ui_frame.grid(column=1, row=0, padx=10, pady=30, sticky="news")
 
+        self.display_frame.update()
+        self.canvas1_wh = [self.canv1.winfo_width(), self.canv1.winfo_height()]
+        self.canvas2_wh = [self.canv2.winfo_width(), self.canv2.winfo_height()]
+        self.canvas3_wh = [self.canv3.winfo_width(), self.canv3.winfo_height()]
+        self.canvas4_wh = [self.canv4.winfo_width(), self.canv4.winfo_height()]
+        print(self.canvas1_wh[0], self.canvas1_wh[1])
+        print(self.canvas2_wh[0], self.canvas2_wh[1])
+        print(self.canvas3_wh[0], self.canvas3_wh[1])
+        print(self.canvas4_wh[0], self.canvas4_wh[1])
+
     def show(self):
         self.update()
         self.root.mainloop()
@@ -94,11 +95,16 @@ class Window1():
     def update(self):
         ret , frame = self.vid.get_frame()
         if ret:
-            self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame))
-            self.canv1.create_image(0, 0, image=self.photo, anchor=tk.NW)
-            self.canv2.create_image(0, 0, image=self.photo, anchor=tk.NW)
-            self.canv3.create_image(0, 0, image=self.photo, anchor=tk.NW)
-            self.canv4.create_image(0, 0, image=self.photo, anchor=tk.NW)
+            self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+            self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo, anchor=tk.CENTER)
+            self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo, anchor=tk.CENTER)
+            self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo, anchor=tk.CENTER)
+            self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo, anchor=tk.CENTER)
+        
+            if self.display_frame_large.winfo_ismapped():
+                print("zoom")
+            else:
+                print("grid")
         
         self.root.after(self.delay, self.update)
 
@@ -154,11 +160,11 @@ class Window1():
         if cam_index == 1:
             self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
         elif cam_index == 2:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.canv2.itemcget("c2Stream", "image"))
+            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
         elif cam_index == 3:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.canv3.itemcget("c3Stream", "image"))
+            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
         elif cam_index == 4:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.canv4.itemcget("c4Stream", "image"))
+            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
         else:
             print("zoom pass")
             return
