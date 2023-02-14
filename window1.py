@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image,ImageTk
 from VideoCapture import *
+import cv2
 
 class Window1():
     button_font = ("Arial", 14)
@@ -17,7 +18,11 @@ class Window1():
             self.root.resizable(0, 0)
         
         self.delay = 41             # 24 fps frame delay
-        self.vid = MyVideoCapture(0)
+        self.vid1 = MyVideoCapture(0)
+        # self.vid2 = MyVideoCapture("sample.mkv")
+        # self.vid3 = MyVideoCapture(2)
+        # self.vid4 = MyVideoCapture("sample.mkv")
+        self.vid_large = MyVideoCapture("sample.mkv") 
 
         # Main Widow Frames
         self.container_frame = tk.Frame(self.root)
@@ -79,32 +84,73 @@ class Window1():
         self.ui_frame.grid(column=1, row=0, padx=10, pady=30, sticky="news")
 
         self.display_frame.update()
+        self.display_frame_large.update_idletasks()
         self.canvas1_wh = [self.canv1.winfo_width(), self.canv1.winfo_height()]
         self.canvas2_wh = [self.canv2.winfo_width(), self.canv2.winfo_height()]
         self.canvas3_wh = [self.canv3.winfo_width(), self.canv3.winfo_height()]
         self.canvas4_wh = [self.canv4.winfo_width(), self.canv4.winfo_height()]
+        self.canvasbig_wh = [self.canv_big.winfo_width(), self.canv_big.winfo_height()] 
         print(self.canvas1_wh[0], self.canvas1_wh[1])
         print(self.canvas2_wh[0], self.canvas2_wh[1])
         print(self.canvas3_wh[0], self.canvas3_wh[1])
         print(self.canvas4_wh[0], self.canvas4_wh[1])
+        print(self.canvasbig_wh[0], self.canvasbig_wh[1])
 
     def show(self):
         self.update()
         self.root.mainloop()
     
+    def rescale_frame(frame, percent=75):
+        width = int(frame.shape[1] * percent/ 100)
+        height = int(frame.shape[0] * percent/ 100)
+        dim = (width, height)
+        return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
+
+    def frame_scaler(self, index=1, percent=100):
+        height, width = 0
+        if index == 1:
+            width = self.vid1.get(3)
+            height = self.vid1.get(4)
+        elif index == 2:
+            width = self.vid2.get(3)
+            height = self.vid2.get(4)
+        elif index == 3:
+            width = self.vid3.get(3)
+            height = self.vid3.get(4)
+        elif index == 4:
+            width = self.vid4.get(3)
+            height = self.vid4.get(4)
+        else:
+            print("Frame scaler error.")
+            return
+        
+        return (width * percent / 100, height * percent / 100)
+    
     def update(self):
-        ret , frame = self.vid.get_frame()
+        ret , frame = self.vid1.get_frame()
+        ret2, frame2 = self.vid_large.get_frame()
         if ret:
-            self.photo = ImageTk.PhotoImage(image = Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+            self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
             self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo, anchor=tk.CENTER)
             self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo, anchor=tk.CENTER)
             self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo, anchor=tk.CENTER)
             self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo, anchor=tk.CENTER)
         
-            if self.display_frame_large.winfo_ismapped():
-                print("zoom")
-            else:
-                print("grid")
+        if self.display_frame_large.winfo_ismapped():
+            # # tmp = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+            # resized_frame = self.rescale_frame(frame)
+            # tmp = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+            # print("zoom")
+            # # self.canv_big.delete("all")
+            # self.canv_big.create_image(0, 0, image=tmp, anchor=tk.CENTER)
+
+            if ret2:
+                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((600, 600), Image.BILINEAR))
+                # self.canv_big.create_image(self.canvasbig_wh[0]//2, self.canvasbig_wh[1]//2, image=self.photo_large, anchor=tk.CENTER)
+                self.canv_big.create_image(350, 300, image=self.photo_large, anchor=tk.CENTER)
+        else:
+            # print("grid")
+            pass
         
         self.root.after(self.delay, self.update)
 
