@@ -17,11 +17,12 @@ class Window1():
             self.root.title(title)
             self.root.resizable(0, 0)
         
+        self.active_stream = 1
         self.delay = 41             # 24 fps frame delay
-        self.vid1 = MyVideoCapture(0)
-        # self.vid2 = MyVideoCapture("sample.mkv")
-        # self.vid3 = MyVideoCapture(2)
-        # self.vid4 = MyVideoCapture("sample.mkv")
+        self.vid1 = MyVideoCapture("1.gif")
+        self.vid2 = MyVideoCapture("2.gif")
+        self.vid3 = MyVideoCapture("3.gif")
+        self.vid4 = MyVideoCapture("4.gif")
         self.vid_large = MyVideoCapture("sample.mkv") 
 
         # Main Widow Frames
@@ -127,29 +128,37 @@ class Window1():
         return (width * percent / 100, height * percent / 100)
     
     def update(self):
-        ret , frame = self.vid1.get_frame()
-        ret2, frame2 = self.vid_large.get_frame()
-        if ret:
-            self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
-            self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo, anchor=tk.CENTER)
-            self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo, anchor=tk.CENTER)
-            self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo, anchor=tk.CENTER)
-            self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo, anchor=tk.CENTER)
+        ret1 , frame1 = self.vid1.get_frame()
+        ret2, frame2 = self.vid2.get_frame()
+        ret3, frame3 = self.vid3.get_frame()
+        ret4, frame4 = self.vid4.get_frame()
+        if ret1:
+            self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+            self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
+        if ret2:
+            self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
+            self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
+        if ret3:
+            self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
+            self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
+        if ret4:
+            self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
+            self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
         
         if self.display_frame_large.winfo_ismapped():
-            # # tmp = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
-            # resized_frame = self.rescale_frame(frame)
-            # tmp = ImageTk.PhotoImage(image=Image.fromarray(frame).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
-            # print("zoom")
-            # # self.canv_big.delete("all")
-            # self.canv_big.create_image(0, 0, image=tmp, anchor=tk.CENTER)
+            retl, framel = self.vid1.get_frame()
+            if self.active_stream == 2:
+                retl, framel = self.vid2.get_frame()
+            elif self.active_stream == 3:
+                retl, framel = self.vid3.get_frame()
+            elif self.active_stream == 4:
+                retl, framel = self.vid4.get_frame()
 
-            if ret2:
-                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((600, 600), Image.BILINEAR))
+            if retl:
+                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize((600, 600), Image.BILINEAR))
                 # self.canv_big.create_image(self.canvasbig_wh[0]//2, self.canvasbig_wh[1]//2, image=self.photo_large, anchor=tk.CENTER)
                 self.canv_big.create_image(350, 300, image=self.photo_large, anchor=tk.CENTER)
         else:
-            # print("grid")
             pass
         
         self.root.after(self.delay, self.update)
@@ -164,39 +173,6 @@ class Window1():
     def ShowMenu(self):
         print("Menu Clicked!")
 
-    def focusOnCamera(self, event, cam_num=0):
-        if cam_num == 1:
-            if not self.maximized_canvas[0]:
-                self.displayCamGrid()
-                self.maximized_canvas[0] = 1
-            else:
-                self.displayCamZoom()
-                self.maximized_canvas[0] = 0
-        elif cam_num == 2:
-            if not self.maximized_canvas[1]:
-                self.displayCamGrid()
-                self.maximized_canvas[1] = 1
-            else:
-                self.displayCamZoom()
-                self.maximized_canvas[1] = 0
-        elif cam_num == 3:
-            if not self.maximized_canvas[2]:
-                self.displayCamGrid()
-                self.maximized_canvas[2] = 1
-            else:
-                self.displayCamZoom()
-                self.maximized_canvas[2] = 0
-        elif cam_num == 4:
-            if not self.maximized_canvas[3]:
-                self.displayCamGrid()
-                self.maximized_canvas[3] = 1
-            else:
-                self.displayCamZoom()
-                self.maximized_canvas[3] = 0
-        else:
-            print("focus on cam not working.", cam_num)
-            return
-
     def displayCamGrid(self):
         self.display_frame_large.grid_forget()
         self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
@@ -205,14 +181,19 @@ class Window1():
         self.canv_big.delete("all")
         if cam_index == 1:
             self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            self.active_stream = 1
         elif cam_index == 2:
             self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            self.active_stream = 2
         elif cam_index == 3:
             self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            self.active_stream = 3
         elif cam_index == 4:
             self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            self.active_stream = 4
         else:
             print("zoom pass")
+            self.active_stream = 1
             return
 
         self.display_frame.grid_forget()
