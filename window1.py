@@ -180,16 +180,16 @@ class Window1():
     def displayCamZoom(self, cam_index=0):
         self.canv_big.delete("all")
         if cam_index == 1:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 1
         elif cam_index == 2:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 2
         elif cam_index == 3:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 3
         elif cam_index == 4:
-            self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
+            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 4
         else:
             print("zoom pass")
