@@ -19,8 +19,8 @@ class Window1():
         
         self.active_stream = 1
         self.delay = 41             # 24 fps frame delay
-        self.vid1 = MyVideoCapture("1.gif")
-        self.vid2 = MyVideoCapture("2.gif")
+        self.vid1 = MyVideoCapture(0)
+        self.vid2 = MyVideoCapture("sample.mkv")
         self.vid3 = MyVideoCapture("3.gif")
         self.vid4 = MyVideoCapture("4.gif")
         self.vid_large = MyVideoCapture("sample.mkv") 
@@ -155,9 +155,9 @@ class Window1():
                 retl, framel = self.vid4.get_frame()
 
             if retl:
-                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize((600, 600), Image.BILINEAR))
-                # self.canv_big.create_image(self.canvasbig_wh[0]//2, self.canvasbig_wh[1]//2, image=self.photo_large, anchor=tk.CENTER)
-                self.canv_big.create_image(350, 300, image=self.photo_large, anchor=tk.CENTER)
+                height, width, channels = framel.shape
+                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
+                self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-80, image=self.photo_large, anchor=tk.CENTER)
         else:
             pass
         
@@ -173,6 +173,14 @@ class Window1():
     def ShowMenu(self):
         print("Menu Clicked!")
 
+    def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
+        m = dim2[0] / dim1[0]
+        n = dim2[1] / dim1[1]
+        if (m < n):
+            return (int(dim1[0] * m), int(dim1[1] * m))
+        else:
+            return (int(dim1[0] * n), int(dim1[1] * n))
+
     def displayCamGrid(self):
         self.display_frame_large.grid_forget()
         self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
@@ -180,16 +188,12 @@ class Window1():
     def displayCamZoom(self, cam_index=0):
         self.canv_big.delete("all")
         if cam_index == 1:
-            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 1
         elif cam_index == 2:
-            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 2
         elif cam_index == 3:
-            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 3
         elif cam_index == 4:
-            # self.canv_big.create_image(0, 0, anchor=tk.NW, image=self.img1_large)
             self.active_stream = 4
         else:
             print("zoom pass")
