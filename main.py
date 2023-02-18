@@ -8,25 +8,13 @@ class App(tk.Tk):
 
         self.title('Tkinter MVC Demo')
 
-        # create a model
-        # model = Model('hello@pythontutorial.net')
-
-        # create a view and place it on the root window
-        # view = View(self)
-        # view.grid(row=0, column=0, padx=10, pady=10)
-
-        # create a controller
-        # controller = Controller(model, view)
-
-        # set the controller to view
-        # view.set_controller(controller)
-
-        win1 = win.Window1(self)
+        win1 = win.Window2(self)
+        # win1.SetStream1(win.MyVideoCapture(0))
+        # win1.SetStream2(win.MyVideoCapture("sample.mkv"))
+        # win1.SetStream3(win.MyVideoCapture("1.gif"))
+        # win1.SetStream4(win.MyVideoCapture("2.gif"))
         win1.show()
 
-
 if __name__ == '__main__':
-    # w = win.Window1(tk.Tk())
-    # w.show()
     app = App()
     app.mainloop()

@@ -1,31 +1,28 @@
 import tkinter as tk
 from PIL import Image,ImageTk
 from VideoCapture import *
+from tkinter import Toplevel
 import cv2
 
 class Window1():
     button_font = ("Arial", 14)
 
-    def __init__(self, parent, title = "Window 1", width = 1000, height = 600):
+    def __init__(self, parent, title = "Window 1", width = 1000, height = 600, video_streams=[MyVideoCapture()]):
         self.root = parent
         window_w = width
         window_h = height
         if isinstance(parent, tk.Tk):
-            pos_x = (self.root.winfo_screenwidth() // 2) - (window_w // 2)
-            pos_y = (self.root.winfo_screenheight() // 2) - (window_h // 2) - 50
-            self.root.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
+            self.pos_x = (self.root.winfo_screenwidth() // 2) - (window_w // 2)
+            self.pos_y = (self.root.winfo_screenheight() // 2) - (window_h // 2) - 50
+            self.root.geometry('{}x{}+{}+{}'.format(window_w, window_h, self.pos_x, self.pos_y))
             self.root.title(title)
             self.root.resizable(0, 0)
         
         self.active_stream = 1
         self.delay = 41             # 24 fps frame delay
-        self.vid1 = MyVideoCapture(0)
-        self.vid2 = MyVideoCapture("sample.mkv")
-        self.vid3 = MyVideoCapture("3.gif")
-        self.vid4 = MyVideoCapture("4.gif")
-        self.vid_large = MyVideoCapture("sample.mkv") 
+        self.vid_large = MyVideoCapture(0) 
 
-        # Main Widow Frames
+        # Main Window Frames
         self.container_frame = tk.Frame(self.root)
         self.display_frame = tk.Frame(self.container_frame)
         self.display_frame_large = tk.Frame(self.container_frame)
@@ -59,12 +56,6 @@ class Window1():
         self.img1 = ImageTk.PhotoImage(Image.open("video.png").resize([280, 280], Image.BILINEAR))
         self.img1_large = ImageTk.PhotoImage(Image.open("video.png").resize([560, 560], Image.BILINEAR))
 
-        ## Add image on each canvas
-        # self.canv1.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c1Stream")
-        # self.canv2.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c2Stream")
-        # self.canv3.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c3Stream")
-        # self.canv4.create_image(0, 0, anchor=tk.CENTER, image=self.img1, tag="c4Stream")
-
         # Large display setup
         self.canv_big = tk.Canvas(self.display_frame_large, width=650, height=420, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
         self.canv_big.bind("<Button-1>", lambda event : self.displayCamGrid())
@@ -91,11 +82,6 @@ class Window1():
         self.canvas3_wh = [self.canv3.winfo_width(), self.canv3.winfo_height()]
         self.canvas4_wh = [self.canv4.winfo_width(), self.canv4.winfo_height()]
         self.canvasbig_wh = [self.canv_big.winfo_width(), self.canv_big.winfo_height()] 
-        print(self.canvas1_wh[0], self.canvas1_wh[1])
-        print(self.canvas2_wh[0], self.canvas2_wh[1])
-        print(self.canvas3_wh[0], self.canvas3_wh[1])
-        print(self.canvas4_wh[0], self.canvas4_wh[1])
-        print(self.canvasbig_wh[0], self.canvasbig_wh[1])
 
     def show(self):
         self.update()
@@ -107,26 +93,6 @@ class Window1():
         dim = (width, height)
         return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
 
-    def frame_scaler(self, index=1, percent=100):
-        height, width = 0
-        if index == 1:
-            width = self.vid1.get(3)
-            height = self.vid1.get(4)
-        elif index == 2:
-            width = self.vid2.get(3)
-            height = self.vid2.get(4)
-        elif index == 3:
-            width = self.vid3.get(3)
-            height = self.vid3.get(4)
-        elif index == 4:
-            width = self.vid4.get(3)
-            height = self.vid4.get(4)
-        else:
-            print("Frame scaler error.")
-            return
-        
-        return (width * percent / 100, height * percent / 100)
-    
     def update(self):
         ret1 , frame1 = self.vid1.get_frame()
         ret2, frame2 = self.vid2.get_frame()
@@ -163,15 +129,126 @@ class Window1():
         
         self.root.after(self.delay, self.update)
 
+    def SetStream1(self, stream):
+        self.vid1 = stream
+
+    def SetStream2(self, stream):
+        self.vid2 = stream
+
+    def SetStream3(self, stream):
+        self.vid3 = stream
+
+    def SetStream4(self, stream):
+        self.vid4 = stream
 
     def ShowNotification(self):
         print("Notification Clicked!")
 
+        self.NotificationWindow = Toplevel(self.root)
+        self.NotificationWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
+        self.NotificationWindow.title("Notifications window")
+
+        container = tk.Frame(self.NotificationWindow)
+
+        canvas = tk.Canvas(container)
+        frame = tk.Frame(canvas)
+        scroll = tk.Scrollbar(self.NotificationWindow, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scroll.set)
+
+        pill1 = self.CreateNotificationPill(frame, title="Notification 1", width=275, height=40, side="left")
+        pill2 = self.CreateNotificationPill(frame, title="Notification 2", width=275, height=40, side="left")
+        pill3 = self.CreateNotificationPill(frame, title="Notification 3", width=275, height=40, side="left")
+        pill4 = self.CreateNotificationPill(frame, title="Notification 4", width=275, height=40, side="left")
+        pill5 = self.CreateNotificationPill(frame, title="Notification 5", width=275, height=40, side="left")
+        pill6 = self.CreateNotificationPill(frame, title="Notification 6", width=275, height=40, side="left")
+        pill7 = self.CreateNotificationPill(frame, title="Notification 7", width=275, height=40, side="left")
+        pill8 = self.CreateNotificationPill(frame, title="Notification 8", width=275, height=40, side="left")
+        pill9 = self.CreateNotificationPill(frame, title="Notification 9", width=275, height=40, side="left")
+        pill10 = self.CreateNotificationPill(frame, title="Notification 10", width=275, height=40, side="left")
+        pill11 = self.CreateNotificationPill(frame, title="Notification 11", width=275, height=40, side="left")
+        pill12 = self.CreateNotificationPill(frame, title="Notification 12", width=275, height=40, side="left")
+        pill13 = self.CreateNotificationPill(frame, title="Notification 13", width=275, height=40, side="left")
+
+        pill1.pack(padx=5, pady=5)
+        pill2.pack(padx=5, pady=5)
+        pill3.pack(padx=5, pady=5)
+        pill4.pack(padx=5, pady=5)
+        pill5.pack(padx=5, pady=5)
+        pill6.pack(padx=5, pady=5)
+        pill7.pack(padx=5, pady=5)
+        pill8.pack(padx=5, pady=5)
+        pill9.pack(padx=5, pady=5)
+        pill10.pack(padx=5, pady=5)
+        pill11.pack(padx=5, pady=5)
+        pill12.pack(padx=5, pady=5)
+        pill13.pack(padx=5, pady=5)
+
+        scroll.pack(side="right", fill="y")
+        canvas.pack(side="left")
+        canvas.create_window((0,0), window=frame, anchor="nw")
+        frame.bind("<Configure>", lambda event : canvas.configure(scrollregion=canvas.bbox("all"), width = 300, height=300))
+
+        container.pack(fill="both", expand=True)
+
+
     def ShowHistory(self):
         print("History Clicked!")
 
+        self.HistoryWindow = Toplevel(self.root)
+        self.HistoryWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
+        self.HistoryWindow.title("History window")
+
+        container = tk.Frame(self.HistoryWindow)
+
+        canvas = tk.Canvas(container)
+        frame = tk.Frame(canvas)
+        scroll = tk.Scrollbar(self.HistoryWindow, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scroll.set)
+
+        pill1 = self.CreateHistoryPill(frame, title="Recording 1", width=275, height=40, side="left")
+        pill2 = self.CreateHistoryPill(frame, title="Recording 2", width=275, height=40, side="left")
+        pill3 = self.CreateHistoryPill(frame, title="Recording 3", width=275, height=40, side="left")
+        pill4 = self.CreateHistoryPill(frame, title="Recording 4", width=275, height=40, side="left")
+        pill5 = self.CreateHistoryPill(frame, title="Recording 5", width=275, height=40, side="left")
+        pill6 = self.CreateHistoryPill(frame, title="Recording 6", width=275, height=40, side="left")
+        pill7 = self.CreateHistoryPill(frame, title="Recording 7", width=275, height=40, side="left")
+        pill8 = self.CreateHistoryPill(frame, title="Recording 8", width=275, height=40, side="left")
+        pill9 = self.CreateHistoryPill(frame, title="Recording 9", width=275, height=40, side="left")
+        pill10 = self.CreateHistoryPill(frame, title="Recording 10", width=275, height=40, side="left")
+        pill11 = self.CreateHistoryPill(frame, title="Recording 11", width=275, height=40, side="left")
+        pill12 = self.CreateHistoryPill(frame, title="Recording 12", width=275, height=40, side="left")
+        pill13 = self.CreateHistoryPill(frame, title="Recording 13", width=275, height=40, side="left")
+
+        pill1.pack(padx=5, pady=5)
+        pill2.pack(padx=5, pady=5)
+        pill3.pack(padx=5, pady=5)
+        pill4.pack(padx=5, pady=5)
+        pill5.pack(padx=5, pady=5)
+        pill6.pack(padx=5, pady=5)
+        pill7.pack(padx=5, pady=5)
+        pill8.pack(padx=5, pady=5)
+        pill9.pack(padx=5, pady=5)
+        pill10.pack(padx=5, pady=5)
+        pill11.pack(padx=5, pady=5)
+        pill12.pack(padx=5, pady=5)
+        pill13.pack(padx=5, pady=5)
+
+        scroll.pack(side="right", fill="y")
+        canvas.pack(side="left")
+        canvas.create_window((0,0), window=frame, anchor="nw")
+        frame.bind("<Configure>", lambda event : canvas.configure(scrollregion=canvas.bbox("all"), width = 300, height=300))
+
+        container.pack(fill="both", expand=True)
+
     def ShowMenu(self):
         print("Menu Clicked!")
+
+        self.MenuWindow = Toplevel(self.root)
+        self.MenuWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
+        self.MenuWindow.title("Menu window")
+
+        tmp = tk.Label(self.MenuWindow, text="Menu shows up here.")
+        tmp.pack(padx=20, pady=20)
 
     def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
         m = dim2[0] / dim1[0]
@@ -202,3 +279,28 @@ class Window1():
 
         self.display_frame.grid_forget()
         self.display_frame_large.grid(column=0, row=0, padx=20, pady=10, sticky="news")
+
+    def CreateNotificationPill(self, parent, imgpath="", title="title", message="Notification message", width=500, height=100, font=None, side="top"):
+        container = tk.Frame(parent, bd=2)
+        # lbl_title = tk.Label(container, text=title)
+        lbl_message = tk.Label(container, text="{}: {}".format(title, message))
+        # canv = tk.Canvas(container, height=40, width=40, bd=0, highlightbackground="#222", highlightthickness=2)
+        
+        # lbl_title.pack(padx=20, pady=0, side=side)
+        lbl_message.pack(padx=20, pady=0, side=side)
+        # canv.pack(padx=2, pady=2, side="left")
+
+        return container
+
+    def CreateHistoryPill(self, parent, imgpath="", title="title", width=500, height=100, font=None, side="top"):
+        container = tk.Frame(parent, bd=2)
+        container.columnconfigure(0, weight=1)
+        container.columnconfigure(1, weight=10)
+        container.rowconfigure(0, weight=1)
+        lbl_message = tk.Label(container, text="{}".format(title))
+        canv = tk.Canvas(container, height=40, width=40, bd=0, highlightbackground="#222", highlightthickness=2)
+        
+        lbl_message.grid(padx=20, column=1, row=0, sticky="news")
+        canv.grid(padx=10, column=0, row=0, sticky="news")
+
+        return container
