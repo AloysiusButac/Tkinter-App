@@ -7,7 +7,7 @@ import cv2
 class Window1():
     button_font = ("Arial", 14)
 
-    def __init__(self, parent, title = "Window 1", width = 1000, height = 600, video_streams=[MyVideoCapture()]):
+    def __init__(self, parent, title = "Window 1", width = 1000, height = 600):
         self.root = parent
         window_w = width
         window_h = height
@@ -94,36 +94,38 @@ class Window1():
         return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
 
     def update(self):
-        ret1 , frame1 = self.vid1.get_frame()
-        ret2, frame2 = self.vid2.get_frame()
-        ret3, frame3 = self.vid3.get_frame()
-        ret4, frame4 = self.vid4.get_frame()
-        if ret1:
-            self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
-            self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
-        if ret2:
-            self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
-            self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
-        if ret3:
-            self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
-            self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
-        if ret4:
-            self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
-            self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
-        
-        if self.display_frame_large.winfo_ismapped():
-            retl, framel = self.vid1.get_frame()
-            if self.active_stream == 2:
-                retl, framel = self.vid2.get_frame()
-            elif self.active_stream == 3:
-                retl, framel = self.vid3.get_frame()
-            elif self.active_stream == 4:
-                retl, framel = self.vid4.get_frame()
+        if(self.vid1.grab_frame() and self.vid2.grab_frame() and self.vid3.grab_frame() and self.vid4.grab_frame()):
+            ret1, frame1 = self.vid1.retrieve_frame()
+            ret2, frame2 = self.vid2.retrieve_frame()
+            ret3, frame3 = self.vid3.retrieve_frame()
+            ret4, frame4 = self.vid4.retrieve_frame()
+            if ret1:
+                self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
+                self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
+                self.RecordStream(self.vid1)
+            if ret2:
+                self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
+                self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
+            if ret3:
+                self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
+                self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
+            if ret4:
+                self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
+                self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
+            
+            if self.display_frame_large.winfo_ismapped():
+                retl, framel = self.vid1.retrieve_frame()
+                if self.active_stream == 2:
+                    retl, framel = self.vid2.retrieve_frame()
+                elif self.active_stream == 3:
+                    retl, framel = self.vid3.retrieve_frame()
+                elif self.active_stream == 4:
+                    retl, framel = self.vid4.retrieve_frame()
 
-            if retl:
-                height, width, channels = framel.shape
-                self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
-                self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-80, image=self.photo_large, anchor=tk.CENTER)
+                if retl:
+                    height, width, channels = framel.shape
+                    self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
+                    self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-80, image=self.photo_large, anchor=tk.CENTER)
         else:
             pass
         
@@ -140,6 +142,9 @@ class Window1():
 
     def SetStream4(self, stream):
         self.vid4 = stream
+
+    def RecordStream(self, stream):
+        self.vid1.write_frame()
 
     def ShowNotification(self):
         print("Notification Clicked!")
