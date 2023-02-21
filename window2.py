@@ -41,25 +41,25 @@ class Window2():
         """
 
         # Sidebar 
-        sidebar_frame = tk.Frame(self.root)
+        sidebar_frame = tk.Frame(self.root, bg="#fff")
         sidebar_frame.rowconfigure(0, weight=1)
         sidebar_frame.rowconfigure(1, weight=3)
         sidebar_frame.rowconfigure(2, weight=1)
         sidebar_frame.rowconfigure(3, weight=2)
         # Image & Buttons
-        img = tk.Canvas(sidebar_frame, bd=1, relief="solid", height=200, width=230)
+        img = tk.Canvas(sidebar_frame, bd=1, bg="#fff", relief="solid", height=200, width=230)
         # img = tk.Canvas(sidebar_frame, height=200, width=230)
         self.sidebar_image = ImageTk.PhotoImage(Image.open("video.png").resize([200, 200], Image.BILINEAR))
         img.create_image(115, 100, anchor=tk.CENTER, image=self.sidebar_image)
         # btn_container = tk.Frame(sidebar_frame, bg="#aaa", bd=1, relief="solid")
-        btn_container = tk.Frame(sidebar_frame)
+        btn_container = tk.Frame(sidebar_frame, bg="#fff")
         side_btns = self.CreateButtonArray(btn_container, 3, ["Button"] * 3, anchor="top")
         for b in side_btns:
             b.pack(ipady=10, padx=5, pady=0, fill="x", expand=True)
 
         # Connection Status panel
         # connection_status_frame = tk.Frame(sidebar_frame, bg="#bbb", bd=1, relief="solid")
-        connection_status_frame = tk.Frame(sidebar_frame)
+        connection_status_frame = tk.Frame(sidebar_frame, bg="#fff")
         connection_status_frame.rowconfigure(0, weight=1)
         connection_status_frame.rowconfigure(1, weight=1)
         connection_status_frame.rowconfigure(2, weight=1)
@@ -70,19 +70,19 @@ class Window2():
         style = Style(self.root)
         style.configure("TSeparator", bg="#222", relief="solid")
         ## Connection Status Elements
-        lbl_connstat = tk.Label(connection_status_frame, text="Connection Status:", font=self.font)
-        srv_frme = tk.Frame(connection_status_frame)
+        lbl_connstat = tk.Label(connection_status_frame, text="Connection Status:", font=self.font, bg="#fff")
+        srv_frme = tk.Frame(connection_status_frame, bg="#fff")
         srv_frme.columnconfigure(0, weight=1)
         srv_frme.rowconfigure(0, weight=1)
         srv_frme.rowconfigure(1, weight=1)
-        lbl_svr = tk.Label(srv_frme, text="Server:", font=self.font)
-        btn_srv = tk.Button(srv_frme, text="Button", font=self.button_font, bd=1, relief="solid", foreground="#333")
-        alrt_frme = tk.Frame(connection_status_frame)
+        lbl_svr = tk.Label(srv_frme, text="Server:", font=self.font, bg="#fff")
+        btn_srv = tk.Button(srv_frme, text="Button", font=self.button_font, bd=1, bg="#fff", relief="solid", foreground="#333")
+        alrt_frme = tk.Frame(connection_status_frame, bg="#fff")
         alrt_frme.columnconfigure(0, weight=1)
         alrt_frme.rowconfigure(0, weight=1)
         alrt_frme.rowconfigure(1, weight=1)
-        lbl_alrt = tk.Label(alrt_frme, text="Alert Module:", font=self.font)
-        btn_alrt = tk.Button(alrt_frme, text="Button", font=self.button_font, bd=1, relief="solid", foreground="#333")
+        lbl_alrt = tk.Label(alrt_frme, text="Alert Module:", font=self.font, bg="#fff")
+        btn_alrt = tk.Button(alrt_frme, text="Button", font=self.button_font, bd=1, bg="#fff", relief="solid", foreground="#333")
         lbl_connstat.pack(padx=10, pady=0, fill="x")
         lbl_svr.grid(column=0, row=0, sticky="nw")
         btn_srv.grid(ipadx=20, ipady=5, padx=5, pady=0, column=0, row=1, sticky="ew")
@@ -110,7 +110,7 @@ class Window2():
         """
         # Main Panel
         # data_frame = tk.Frame(self.root, bd=1, relief="solid", bg="#7af")
-        data_frame = tk.Frame(self.root, bd=1, relief="solid")
+        data_frame = tk.Frame(self.root, bd=1, relief="solid", bg="#fff")
 
         data_frame.rowconfigure(0, weight=1)
         data_frame.rowconfigure(1, weight=1)
@@ -122,19 +122,19 @@ class Window2():
         # data_frame_menu = tk.Frame(data_frame, bg="yellow", bd=1, relief="solid")
         # data_frame_ribbon = tk.Frame(data_frame, bg="yellow", bd=1, relief="solid")
         # data_frame_canvases = tk.Frame(data_frame, bg="yellow", bd=1, relief="solid")
-        data_frame_menu = tk.Frame(data_frame)
-        data_frame_ribbon = tk.Frame(data_frame)
-        data_frame_canvases = tk.Frame(data_frame)
+        data_frame_menu = tk.Frame(data_frame, bg="#fff")
+        data_frame_ribbon = tk.Frame(data_frame, bg="#fff")
+        data_frame_canvases = tk.Frame(data_frame, bg="#fff")
 
         # Menu frame Elements
-        btn_home = tk.Button(data_frame_menu, text="Home", font=self.button_font, bd=0).pack(side="left", ipadx=10)
+        btn_home = tk.Button(data_frame_menu, text="Home", font=self.button_font, bg="#fff", bd=0).pack(side="left", ipadx=10)
         
         # Ribbon frame Elements
         data_frame_ribbon.rowconfigure(0, weight=1)
         data_frame_ribbon.columnconfigure(0, weight=1)
 
         # rbnfrme_stat = tk.Frame(data_frame_ribbon, bd=0, highlightbackground="#222", highlightthickness=2)
-        rbnfrme_stat = tk.Frame(data_frame_ribbon)
+        rbnfrme_stat = tk.Frame(data_frame_ribbon, bg="#fff")
 
         self.default_image = ImageTk.PhotoImage(Image.open("video.png").resize([50, 50], Image.BILINEAR))
 
@@ -153,8 +153,8 @@ class Window2():
         data_frame_canvases.rowconfigure(1, weight=1)
         data_frame_canvases.columnconfigure(0, weight=1)
         data_frame_canvases.columnconfigure(1, weight=3)
-        data_frame_canvases_recent = tk.Frame(data_frame_canvases)
-        data_frame_canvases_detected = tk.Frame(data_frame_canvases)
+        data_frame_canvases_recent = tk.Frame(data_frame_canvases, bg="#fff")
+        data_frame_canvases_detected = tk.Frame(data_frame_canvases, bg="#fff")
 
         self.pill_img1 = ImageTk.PhotoImage(Image.open("graph.png").resize([400, 100], Image.BILINEAR))
         self.pill_img2 = ImageTk.PhotoImage(Image.open("graph2.png").resize([140, 280], Image.BILINEAR))
@@ -172,7 +172,7 @@ class Window2():
         data_frame_canvases_detected.grid(column=0, row=0, sticky="news")
         data_frame_canvases_recent.grid(column=1, row=0, padx=10, pady=0, sticky="news")
 
-        data_frame_canvases_buttons = tk.Frame(data_frame_canvases)
+        data_frame_canvases_buttons = tk.Frame(data_frame_canvases, bg="#fff")
         data_buttons = self.CreateButtonArray(data_frame_canvases_buttons, 3, ["Button"]*3)
         for btn in data_buttons:
             btn.pack(padx=5, pady=5, ipadx=15, ipady=0, side="left")
@@ -203,8 +203,8 @@ class Window2():
     def CreateStatPill(self, parent, image, title="Pill", width=500, height=50, font=None, value=""):
         # container = tk.Frame(parent, bg="#7ef", bd=2)
         container = tk.Frame(parent, bg="#fff", bd=2, highlightbackground="#222", highlightthickness=1)
-        lbl = tk.Label(container, text=title, font=self.font)
-        canv = tk.Canvas(container, height=50, width=50, bd=0, highlightbackground="#222", highlightthickness=0)
+        lbl = tk.Label(container, text=title, font=self.font, bg="#fff")
+        canv = tk.Canvas(container, height=50, width=50, bd=0, bg="#fff", highlightbackground="#222", highlightthickness=0)
 
         canv.create_image(0, 0, anchor=tk.NW, image=image)
         
@@ -235,7 +235,7 @@ class Window2():
     def CreateButtonArray(self, parent, count=0, titles=[], commands=[], anchor="left"):
         output = []
         for i in range(count):
-            output.append(tk.Button(parent, text=titles[i], font=self.button_font, bd=1, relief="solid", foreground="#333"))
+            output.append(tk.Button(parent, text=titles[i], font=self.button_font, bd=1, bg="#fff", relief="solid", foreground="#333"))
 
         return output
 
