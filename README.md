@@ -9,7 +9,7 @@ To list all installed packages:
 ``` -->
 
 ### Install Required Packages
-1. Install Pillow
+1. Install Pillow and OpenCV
    ```
    pip install Pillow
    ```

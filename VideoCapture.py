@@ -15,12 +15,18 @@ class MyVideoCapture:
         # Get video source width and height
         self.width = int(self.vid.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.height = int(self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    def create_writer(self, name=""):
+        """
+        Creates a writer which saves video output of the VideoCapture
 
-        # Prepare video writer
+        @param name File name
+        """
         self.four_cc = cv2.VideoWriter_fourcc(*'mp4v')
         file_name = 'bin/history/{} {}.mp4'.format(name, self.now.strftime("%Y-%m-%d %H_%M_%S"))
         print(file_name, "created.")
         self.writer = cv2.VideoWriter(filename=file_name, fourcc=self.four_cc, fps=20.0, frameSize=(self.width, self.height))
+
 
     def grab_frame(self):
         if self.vid.isOpened() and self.vid.grab():
@@ -31,7 +37,7 @@ class MyVideoCapture:
         return (self.ret, None)
     
     def write_frame(self):
-        if self.vid.isOpened() and self.ret and self.frame is not None:
+        if self.vid.isOpened() and self.writer is not None and self.ret and self.frame is not None:
             self.writer.write(self.frame)
 
     def get_frame(self):

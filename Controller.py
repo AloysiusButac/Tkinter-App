@@ -7,7 +7,7 @@ class State(Enum):
     WINDOW2 = 2
 
 # VideoCapture serves as out model
-# Active window(window1/window2) serves as our view
+# Window Manager serves as our view
 
 class Controller:
     def __init__(self, model, view):
@@ -15,9 +15,10 @@ class Controller:
         self.model = model
         self.view = view
 
-        # self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-
         self.state = State.WINDOW1
+    
+    def show(self):
+        pass
 
     def update(self):
         self.view.update()
@@ -26,7 +27,8 @@ class Controller:
         self.state = state
     
     def setCamGrid(self, streams=[MyVideoCapture()]*4):
-        self.model
+        # self.model
+        pass
     
     def save_recording(self):
         pass

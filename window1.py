@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image,ImageTk
 from VideoCapture import *
 from tkinter import Toplevel
+from NotificationWindow import *
 import cv2
 
 class Window1():
@@ -21,6 +22,7 @@ class Window1():
         self.active_stream = 1
         self.delay = 41             # 24 fps frame delay
         self.vid_large = MyVideoCapture(0) 
+        self.set_record = False
 
         # Main Window Frames
         self.container_frame = tk.Frame(self.root)
@@ -102,16 +104,23 @@ class Window1():
             if ret1:
                 self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
                 self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
-                self.RecordStream(self.vid1)
+                if self.set_record:
+                    self.RecordStream(self.vid1)
             if ret2:
                 self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
                 self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
+                if self.set_record:
+                    self.RecordStream(self.vid2)
             if ret3:
                 self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
                 self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
+                if self.set_record:
+                    self.RecordStream(self.vid3)
             if ret4:
                 self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
                 self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
+                if self.set_record:
+                    self.RecordStream(self.vid4)
             
             if self.display_frame_large.winfo_ismapped():
                 retl, framel = self.vid1.retrieve_frame()
@@ -144,57 +153,16 @@ class Window1():
         self.vid4 = stream
 
     def RecordStream(self, stream):
-        self.vid1.write_frame()
+        stream.write_frame()
 
     def ShowNotification(self):
         print("Notification Clicked!")
 
-        self.NotificationWindow = Toplevel(self.root)
-        self.NotificationWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
-        self.NotificationWindow.title("Notifications window")
+        self.Notification_window = Toplevel(self.root)
+        self.Notification_window.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
+        self.Notification_window.title("Notifications window")
 
-        container = tk.Frame(self.NotificationWindow)
-
-        canvas = tk.Canvas(container)
-        frame = tk.Frame(canvas)
-        scroll = tk.Scrollbar(self.NotificationWindow, orient="vertical", command=canvas.yview)
-        canvas.configure(yscrollcommand=scroll.set)
-
-        pill1 = self.CreateNotificationPill(frame, title="Notification 1", width=275, height=40, side="left")
-        pill2 = self.CreateNotificationPill(frame, title="Notification 2", width=275, height=40, side="left")
-        pill3 = self.CreateNotificationPill(frame, title="Notification 3", width=275, height=40, side="left")
-        pill4 = self.CreateNotificationPill(frame, title="Notification 4", width=275, height=40, side="left")
-        pill5 = self.CreateNotificationPill(frame, title="Notification 5", width=275, height=40, side="left")
-        pill6 = self.CreateNotificationPill(frame, title="Notification 6", width=275, height=40, side="left")
-        pill7 = self.CreateNotificationPill(frame, title="Notification 7", width=275, height=40, side="left")
-        pill8 = self.CreateNotificationPill(frame, title="Notification 8", width=275, height=40, side="left")
-        pill9 = self.CreateNotificationPill(frame, title="Notification 9", width=275, height=40, side="left")
-        pill10 = self.CreateNotificationPill(frame, title="Notification 10", width=275, height=40, side="left")
-        pill11 = self.CreateNotificationPill(frame, title="Notification 11", width=275, height=40, side="left")
-        pill12 = self.CreateNotificationPill(frame, title="Notification 12", width=275, height=40, side="left")
-        pill13 = self.CreateNotificationPill(frame, title="Notification 13", width=275, height=40, side="left")
-
-        pill1.pack(padx=5, pady=5)
-        pill2.pack(padx=5, pady=5)
-        pill3.pack(padx=5, pady=5)
-        pill4.pack(padx=5, pady=5)
-        pill5.pack(padx=5, pady=5)
-        pill6.pack(padx=5, pady=5)
-        pill7.pack(padx=5, pady=5)
-        pill8.pack(padx=5, pady=5)
-        pill9.pack(padx=5, pady=5)
-        pill10.pack(padx=5, pady=5)
-        pill11.pack(padx=5, pady=5)
-        pill12.pack(padx=5, pady=5)
-        pill13.pack(padx=5, pady=5)
-
-        scroll.pack(side="right", fill="y")
-        canvas.pack(side="left")
-        canvas.create_window((0,0), window=frame, anchor="nw")
-        frame.bind("<Configure>", lambda event : canvas.configure(scrollregion=canvas.bbox("all"), width = 300, height=300))
-
-        container.pack(fill="both", expand=True)
-
+        notif = NotificationWindow(self.Notificatio_wWindow)
 
     def ShowHistory(self):
         print("History Clicked!")
@@ -209,34 +177,6 @@ class Window1():
         frame = tk.Frame(canvas)
         scroll = tk.Scrollbar(self.HistoryWindow, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=scroll.set)
-
-        pill1 = self.CreateHistoryPill(frame, title="Recording 1", width=275, height=40, side="left")
-        pill2 = self.CreateHistoryPill(frame, title="Recording 2", width=275, height=40, side="left")
-        pill3 = self.CreateHistoryPill(frame, title="Recording 3", width=275, height=40, side="left")
-        pill4 = self.CreateHistoryPill(frame, title="Recording 4", width=275, height=40, side="left")
-        pill5 = self.CreateHistoryPill(frame, title="Recording 5", width=275, height=40, side="left")
-        pill6 = self.CreateHistoryPill(frame, title="Recording 6", width=275, height=40, side="left")
-        pill7 = self.CreateHistoryPill(frame, title="Recording 7", width=275, height=40, side="left")
-        pill8 = self.CreateHistoryPill(frame, title="Recording 8", width=275, height=40, side="left")
-        pill9 = self.CreateHistoryPill(frame, title="Recording 9", width=275, height=40, side="left")
-        pill10 = self.CreateHistoryPill(frame, title="Recording 10", width=275, height=40, side="left")
-        pill11 = self.CreateHistoryPill(frame, title="Recording 11", width=275, height=40, side="left")
-        pill12 = self.CreateHistoryPill(frame, title="Recording 12", width=275, height=40, side="left")
-        pill13 = self.CreateHistoryPill(frame, title="Recording 13", width=275, height=40, side="left")
-
-        pill1.pack(padx=5, pady=5)
-        pill2.pack(padx=5, pady=5)
-        pill3.pack(padx=5, pady=5)
-        pill4.pack(padx=5, pady=5)
-        pill5.pack(padx=5, pady=5)
-        pill6.pack(padx=5, pady=5)
-        pill7.pack(padx=5, pady=5)
-        pill8.pack(padx=5, pady=5)
-        pill9.pack(padx=5, pady=5)
-        pill10.pack(padx=5, pady=5)
-        pill11.pack(padx=5, pady=5)
-        pill12.pack(padx=5, pady=5)
-        pill13.pack(padx=5, pady=5)
 
         scroll.pack(side="right", fill="y")
         canvas.pack(side="left")
