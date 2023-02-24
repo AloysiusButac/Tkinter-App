@@ -8,17 +8,17 @@ class App(tk.Tk):
 
         self.title('Tkinter MVC Demo')
 
-        window_manager = win.WindowManager(self)
-        model = win.MyVideoCapture(0)
+        # window_manager = win.WindowManager(self)
+        # model = win.MyVideoCapture(0)
 
-        self.controller = win.Controller(model, window_manager)
+        # self.controller = win.Controller(model, window_manager)
 
-        # win1 = win.Window1(self)
-        # win1.SetStream1(win.MyVideoCapture("1.gif", name="test1"))
-        # win1.SetStream2(win.MyVideoCapture("2.gif", name="test2"))
-        # win1.SetStream3(win.MyVideoCapture("3.gif", name="test3"))
-        # win1.SetStream4(win.MyVideoCapture("4.gif", name="test4"))
-        # win1.show()
+        win1 = win.Window1(self)
+        win1.SetStream1(win.MyVideoCapture("1.gif", name="test1"))
+        win1.SetStream2(win.MyVideoCapture("2.gif", name="test2"))
+        win1.SetStream3(win.MyVideoCapture("3.gif", name="test3"))
+        win1.SetStream4(win.MyVideoCapture("4.gif", name="test4"))
+        win1.show()
 
 if __name__ == '__main__':
     app = App()
