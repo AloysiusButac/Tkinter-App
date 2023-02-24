@@ -3,12 +3,13 @@ from PIL import Image,ImageTk
 from VideoCapture import *
 from tkinter import Toplevel
 from NotificationWindow import *
+from HistoryWindow import *
 import cv2
 
 class Window1():
     button_font = ("Arial", 14)
 
-    def __init__(self, parent, title = "Window 1", width = 1000, height = 600):
+    def __init__(self, parent, title = "Window 1", width = 1200, height = 600):
         self.root = parent
         window_w = width
         window_h = height
@@ -29,6 +30,8 @@ class Window1():
         self.display_frame = tk.Frame(self.container_frame)
         self.display_frame_large = tk.Frame(self.container_frame)
         self.ui_frame = tk.Frame(self.container_frame)
+        self.notification_frame = NotificationWindow(self.container_frame).get_window()
+        self.history_frame = HistoryWindow(self.container_frame).get_window()
 
         self.container_frame.columnconfigure(0, weight=2)
         self.container_frame.rowconfigure(0, weight=1)
@@ -104,8 +107,7 @@ class Window1():
             if ret1:
                 self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
                 self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
-                if self.set_record:
-                    self.RecordStream(self.vid1)
+                # self.RecordStream(self.vid1)
             if ret2:
                 self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
                 self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
@@ -158,32 +160,40 @@ class Window1():
     def ShowNotification(self):
         print("Notification Clicked!")
 
-        self.Notification_window = Toplevel(self.root)
-        self.Notification_window.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
-        self.Notification_window.title("Notifications window")
+        self.container_frame.update()
+
+        if self.display_frame.winfo_manager():
+            self.display_frame.grid_forget()
+        elif self.display_frame_large.winfo_manager():
+            self.display_frame_large.grid_forget()
+        elif self.history_frame.winfo_manager():
+            self.history_frame.grid_forget()
+
+        if not self.notification_frame.winfo_manager():
+            self.notification_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+        else:
+            self.notification_frame.grid_forget()
+            self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
 
         notif = NotificationWindow(self.Notificatio_wWindow)
 
     def ShowHistory(self):
         print("History Clicked!")
 
-        self.HistoryWindow = Toplevel(self.root)
-        self.HistoryWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
-        self.HistoryWindow.title("History window")
+        self.container_frame.update()
 
-        container = tk.Frame(self.HistoryWindow)
+        if self.display_frame.winfo_manager():
+            self.display_frame.grid_forget()
+        elif self.display_frame_large.winfo_manager():
+            self.display_frame_large.grid_forget()
+        elif self.notification_frame.winfo_manager():
+            self.notification_frame.grid_forget()
 
-        canvas = tk.Canvas(container)
-        frame = tk.Frame(canvas)
-        scroll = tk.Scrollbar(self.HistoryWindow, orient="vertical", command=canvas.yview)
-        canvas.configure(yscrollcommand=scroll.set)
-
-        scroll.pack(side="right", fill="y")
-        canvas.pack(side="left")
-        canvas.create_window((0,0), window=frame, anchor="nw")
-        frame.bind("<Configure>", lambda event : canvas.configure(scrollregion=canvas.bbox("all"), width = 300, height=300))
-
-        container.pack(fill="both", expand=True)
+        if not self.history_frame.winfo_manager():
+            self.history_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+        else:
+            self.history_frame.grid_forget()
+            self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
 
     def ShowMenu(self):
         print("Menu Clicked!")
