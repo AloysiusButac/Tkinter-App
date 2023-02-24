@@ -17,10 +17,10 @@ class MyVideoCapture:
         self.height = int(self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         # Prepare video writer
-        self.four_cc = cv2.VideoWriter_fourcc(*'mp4v')
-        file_name = 'bin/history/{} {}.mp4'.format(name, self.now.strftime("%Y-%m-%d %H_%M_%S"))
-        print(file_name, "created.")
-        self.writer = cv2.VideoWriter(filename=file_name, fourcc=self.four_cc, fps=20.0, frameSize=(self.width, self.height))
+        # self.four_cc = cv2.VideoWriter_fourcc(*'mp4v')
+        # file_name = 'bin/history/{} {}.mp4'.format(name, self.now.strftime("%Y-%m-%d %H_%M_%S"))
+        # print(file_name, "created.")
+        # self.writer = cv2.VideoWriter(filename=file_name, fourcc=self.four_cc, fps=20.0, frameSize=(self.width, self.height))
 
     def grab_frame(self):
         if self.vid.isOpened() and self.vid.grab():
