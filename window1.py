@@ -3,6 +3,7 @@ from PIL import Image,ImageTk
 from VideoCapture import *
 from tkinter import Toplevel
 from NotificationWindow import *
+from HistoryWindow import *
 import cv2
 
 class Window1():
@@ -29,6 +30,7 @@ class Window1():
         self.display_frame_large = tk.Frame(self.container_frame)
         self.ui_frame = tk.Frame(self.container_frame)
         self.notification_frame = NotificationWindow(self.container_frame).get_window()
+        self.history_frame = HistoryWindow(self.container_frame).get_window()
 
         self.container_frame.columnconfigure(0, weight=2)
         self.container_frame.rowconfigure(0, weight=1)
@@ -151,22 +153,18 @@ class Window1():
     def ShowNotification(self):
         print("Notification Clicked!")
 
-        # self.NotificationWindow = Toplevel(self.root)
-        # self.NotificationWindow.geometry("{}x{}+{}+{}".format(1000, 600, self.pos_x, self.pos_y))
-        # self.NotificationWindow.title("Notifications window")
-
         self.container_frame.update()
 
         if self.display_frame.winfo_manager():
             self.display_frame.grid_forget()
         elif self.display_frame_large.winfo_manager():
             self.display_frame_large.grid_forget()
+        elif self.history_frame.winfo_manager():
+            self.history_frame.grid_forget()
 
         if not self.notification_frame.winfo_manager():
-            print("test1")
             self.notification_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
         else:
-            print("test2")
             self.notification_frame.grid_forget()
             self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
 
@@ -174,51 +172,20 @@ class Window1():
     def ShowHistory(self):
         print("History Clicked!")
 
-        self.HistoryWindow = Toplevel(self.root)
-        self.HistoryWindow.geometry("{}x{}+{}+{}".format(1200, 600, self.pos_x, self.pos_y))
-        self.HistoryWindow.title("History window")
+        self.container_frame.update()
 
-        container = tk.Frame(self.HistoryWindow)
+        if self.display_frame.winfo_manager():
+            self.display_frame.grid_forget()
+        elif self.display_frame_large.winfo_manager():
+            self.display_frame_large.grid_forget()
+        elif self.notification_frame.winfo_manager():
+            self.notification_frame.grid_forget()
 
-        canvas = tk.Canvas(container)
-        frame = tk.Frame(canvas)
-        scroll = tk.Scrollbar(self.HistoryWindow, orient="vertical", command=canvas.yview)
-        canvas.configure(yscrollcommand=scroll.set)
-
-        pill1 = self.CreateHistoryPill(frame, title="Recording 1", width=275, height=40, side="left")
-        pill2 = self.CreateHistoryPill(frame, title="Recording 2", width=275, height=40, side="left")
-        pill3 = self.CreateHistoryPill(frame, title="Recording 3", width=275, height=40, side="left")
-        pill4 = self.CreateHistoryPill(frame, title="Recording 4", width=275, height=40, side="left")
-        pill5 = self.CreateHistoryPill(frame, title="Recording 5", width=275, height=40, side="left")
-        pill6 = self.CreateHistoryPill(frame, title="Recording 6", width=275, height=40, side="left")
-        pill7 = self.CreateHistoryPill(frame, title="Recording 7", width=275, height=40, side="left")
-        pill8 = self.CreateHistoryPill(frame, title="Recording 8", width=275, height=40, side="left")
-        pill9 = self.CreateHistoryPill(frame, title="Recording 9", width=275, height=40, side="left")
-        pill10 = self.CreateHistoryPill(frame, title="Recording 10", width=275, height=40, side="left")
-        pill11 = self.CreateHistoryPill(frame, title="Recording 11", width=275, height=40, side="left")
-        pill12 = self.CreateHistoryPill(frame, title="Recording 12", width=275, height=40, side="left")
-        pill13 = self.CreateHistoryPill(frame, title="Recording 13", width=275, height=40, side="left")
-
-        pill1.pack(padx=5, pady=5)
-        pill2.pack(padx=5, pady=5)
-        pill3.pack(padx=5, pady=5)
-        pill4.pack(padx=5, pady=5)
-        pill5.pack(padx=5, pady=5)
-        pill6.pack(padx=5, pady=5)
-        pill7.pack(padx=5, pady=5)
-        pill8.pack(padx=5, pady=5)
-        pill9.pack(padx=5, pady=5)
-        pill10.pack(padx=5, pady=5)
-        pill11.pack(padx=5, pady=5)
-        pill12.pack(padx=5, pady=5)
-        pill13.pack(padx=5, pady=5)
-
-        scroll.pack(side="right", fill="y")
-        canvas.pack(side="left")
-        canvas.create_window((0,0), window=frame, anchor="nw")
-        frame.bind("<Configure>", lambda event : canvas.configure(scrollregion=canvas.bbox("all"), width = 300, height=300))
-
-        container.pack(fill="both", expand=True)
+        if not self.history_frame.winfo_manager():
+            self.history_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+        else:
+            self.history_frame.grid_forget()
+            self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
 
     def ShowMenu(self):
         print("Menu Clicked!")
