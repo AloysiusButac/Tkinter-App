@@ -5,21 +5,23 @@ from PIL import ImageTk, Image
 # https://www.activestate.com/resources/quick-reads/how-to-add-images-in-tkinter/
 # https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python
 
-class Window2():
+class Window2(tk.Frame):
 
     font = ("Arial", 12)
     button_font = ("Arial", 13)
 
     def __init__(self, parent, title = "Window 2", width = 1200, height = 600):
-        self.root = parent
+        super().__init__(parent)
+
+        self.root = tk.Frame(parent)
         window_w = width
         window_h = height
         if isinstance(parent, tk.Tk):
-            pos_x = (self.root.winfo_screenwidth() // 2) - (window_w // 2)
-            pos_y = (self.root.winfo_screenheight() // 2) - (window_h // 2) - 50
-            self.root.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
-            self.root.title(title)
-            self.root.resizable(0, 0)
+            pos_x = (parent.winfo_screenwidth() // 2) - (window_w // 2)
+            pos_y = (parent.winfo_screenheight() // 2) - (window_h // 2) - 50
+            # self.root.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
+            # self.root.title(title)
+            # self.root.resizable(0, 0)
 
         self.root.columnconfigure(0, weight=2, minsize=240)
         self.root.columnconfigure(1, weight=6)

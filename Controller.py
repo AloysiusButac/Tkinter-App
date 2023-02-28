@@ -10,43 +10,28 @@ class State(Enum):
 # Window Manager serves as our view
 
 class Controller:
-    def __init__(self, model, view):
+    model = None
+    viewManager = None
+    def __init__(self, master, model, viewmanager):
         print("Controller initialized")
         self.model = model
-        self.view = view
+        self.viewManager = viewmanager
+        self.master = master
 
         self.state = State.WINDOW1
     
     def show(self):
-        pass
+        self.master.mainloop()
 
     def update(self):
-        self.view.update()
+        # self.view.update()
+        pass
     
     def change_state(self, state):
         self.state = state
-    
-    def setCamGrid(self, streams=[MyVideoCapture()]*4):
-        # self.model
-        pass
     
     def save_recording(self):
         pass
 
     def save_video(self):
         pass
-
-    def setStream(self, stream, index=0, window1=True):
-        if window1:
-            if index == 1:
-                self.view.SetStream1(stream)
-            elif index == 2:
-                self.view.SetStream2(stream)
-            elif index == 3:
-                self.view.SetStream3(stream)
-            elif index == 4:
-                self.view.SetStream4(stream)
-            else:
-                print("Controller Set stream index error.")
-        else:
-            print("Trying to stream to window other than window 1.")

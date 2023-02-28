@@ -9,7 +9,7 @@ import cv2
 class Window1():
     button_font = ("Arial", 14)
 
-    def __init__(self, parent, title = "Window 1", width = 1200, height = 600):
+    def __init__(self, parent, title = "Window 1", width = 1100, height = 600):
         self.root = parent
         window_w = width
         window_h = height
@@ -33,9 +33,13 @@ class Window1():
         self.notification_frame = NotificationWindow(self.container_frame).get_window()
         self.history_frame = HistoryWindow(self.container_frame).get_window()
 
-        self.container_frame.columnconfigure(0, weight=2)
-        self.container_frame.rowconfigure(0, weight=1)
-       
+        # Menu Window setup
+        self.MenuWindow = Toplevel(self.root)
+        self.MenuWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
+        self.MenuWindow.title("Menu window")
+        self.MenuWindow.withdraw()
+        self.menu_btn = tk.Button(self.MenuWindow, text='Window2')
+        self.menu_btn.pack(padx=10, pady=10)
 
         # Display Frame setup
         self.display_frame.columnconfigure(0, weight=1)
@@ -90,7 +94,7 @@ class Window1():
 
     def show(self):
         self.update()
-        self.root.mainloop()
+        # self.root.mainloop()
     
     def rescale_frame(frame, percent=75):
         width = int(frame.shape[1] * percent/ 100)
@@ -175,8 +179,6 @@ class Window1():
             self.notification_frame.grid_forget()
             self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
 
-        notif = NotificationWindow(self.Notificatio_wWindow)
-
     def ShowHistory(self):
         print("History Clicked!")
 
@@ -198,12 +200,18 @@ class Window1():
     def ShowMenu(self):
         print("Menu Clicked!")
 
-        self.MenuWindow = Toplevel(self.root)
-        self.MenuWindow.geometry("{}x{}+{}+{}".format(300, 300, 300, 300))
-        self.MenuWindow.title("Menu window")
+        self.MenuWindow.deiconify()
 
         tmp = tk.Label(self.MenuWindow, text="Menu shows up here.")
         tmp.pack(padx=20, pady=20)
+
+        # self.menu_btn = tk.Button(self.MenuWindow, text='Window 2')
+        # self.menu_btn.pack(padx=10, pady=10)
+    
+    def setMenuButtonCommand(self, command):
+        self.MenuWindow.update()
+        if self.menu_btn is not None:
+            self.menu_btn.configure(command=command)
 
     def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
         m = dim2[0] / dim1[0]
