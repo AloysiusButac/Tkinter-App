@@ -6,7 +6,7 @@ from NotificationWindow import *
 from HistoryWindow import *
 import cv2
 
-class Window1():
+class Window1:
     button_font = ("Arial", 14)
 
     def __init__(self, parent, title = "Window 1", width = 1100, height = 600):
@@ -96,12 +96,6 @@ class Window1():
         self.update()
         # self.root.mainloop()
     
-    def rescale_frame(frame, percent=75):
-        width = int(frame.shape[1] * percent/ 100)
-        height = int(frame.shape[0] * percent/ 100)
-        dim = (width, height)
-        return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
-
     def update(self):
         if(self.vid1.grab_frame() and self.vid2.grab_frame() and self.vid3.grab_frame() and self.vid4.grab_frame()):
             ret1, frame1 = self.vid1.retrieve_frame()
@@ -213,14 +207,6 @@ class Window1():
         if self.menu_btn is not None:
             self.menu_btn.configure(command=command)
 
-    def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
-        m = dim2[0] / dim1[0]
-        n = dim2[1] / dim1[1]
-        if (m < n):
-            return (int(dim1[0] * m), int(dim1[1] * m))
-        else:
-            return (int(dim1[0] * n), int(dim1[1] * n))
-
     def displayCamGrid(self):
         self.display_frame_large.grid_forget()
         self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
@@ -267,3 +253,17 @@ class Window1():
         canv.grid(padx=10, column=0, row=0, sticky="news")
 
         return container
+
+    def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
+        m = dim2[0] / dim1[0]
+        n = dim2[1] / dim1[1]
+        if (m < n):
+            return (int(dim1[0] * m), int(dim1[1] * m))
+        else:
+            return (int(dim1[0] * n), int(dim1[1] * n))
+
+    def rescale_frame(frame, percent=75):
+        width = int(frame.shape[1] * percent/ 100)
+        height = int(frame.shape[0] * percent/ 100)
+        dim = (width, height)
+        return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)

@@ -43,7 +43,7 @@ class HistoryWindow:
         lbl5 = tk.Label(lbl_frame, text="Title 2", bg="#fff").grid(column=4, row=0, sticky="news")
         lbl_frame.pack(ipadx=0, ipady=0, side="top", fill="x")
 
-        lb = tk.Listbox(canv1, width=150, bd=0, relief="solid")
+        lb = tk.Listbox(canv1, width=128, bd=0, relief="solid")
         lb.pack(side="left", fill="both", expand=True)
         scroll = tk.Scrollbar(canv1)
         scroll.pack(side="right", fill="y")
