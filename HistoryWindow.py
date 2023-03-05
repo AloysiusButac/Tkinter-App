@@ -6,10 +6,10 @@ import cv2
 
 class HistoryWindow:
     def __init__(self, parent):
-        self.main_container = tk.Frame(parent)
+        self.main_container = tk.Frame(parent, bg="#9bb")
 
         # =============== Refresh ================
-        btn_container = tk.Frame(self.main_container)
+        btn_container = tk.Frame(self.main_container, bg="#9bb")
         btn_container.columnconfigure(0, weight=2)
         btn_container.columnconfigure(1, weight=2)
         btn_container.columnconfigure(2, weight=2)
@@ -26,8 +26,8 @@ class HistoryWindow:
         return self.main_container
 
     def CreateFormalList(self):
-        container = tk.Frame(self.main_container, bg="#fff")
-        canv1 = tk.Canvas(container, bg="#fff")
+        container = tk.Frame(self.main_container, bg="#9bb")
+        canv1 = tk.Canvas(container, bg="#9bb")
 
         lbl_frame = tk.Frame(canv1, bg="#fff")
         lbl_frame.columnconfigure(0, weight=1)

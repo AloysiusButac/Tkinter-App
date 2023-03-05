@@ -11,10 +11,10 @@ class NotificationWindow:
     header_font_bold = ("Arial", 18, "bold")
     def __init__(self, parent):
         self.root = parent
-        self.main_container = tk.Frame(parent)
+        self.main_container = tk.Frame(parent, bg="#9bb")
 
         # =============== Refresh ================
-        btn_container = tk.Frame(self.main_container)
+        btn_container = tk.Frame(self.main_container, bg="#9bb")
         btn_container.columnconfigure(0, weight=2)
         btn_container.columnconfigure(1, weight=2)
         btn_container.columnconfigure(2, weight=2)
@@ -36,8 +36,8 @@ class NotificationWindow:
         return self.main_container
 
     def CreateFormalList(self, command=None):
-        container = tk.Frame(self.main_container, bg="#fff")
-        canv1 = tk.Canvas(container, bg="#fff")
+        container = tk.Frame(self.main_container, bg="#9bb")
+        canv1 = tk.Canvas(container, bg="#9bb")
 
         lbl_frame = tk.Frame(canv1, bg="#fff")
         lbl_frame.columnconfigure(0, weight=1)
@@ -79,17 +79,18 @@ class NotificationWindow:
             list_option.rowconfigure(2, weight=2)
 
             listbox_options = ["Standing", "Walking", "Kicking", "Running", "Intimidating", "Striking"]
+            active_violation = "Standing"
 
-            lbl_header = tk.Label(list_option, text="Is the violation {}".format(listbox_options[2]), font="Helvetica 12 bold").grid(column=0, row=0, columnspan=2, sticky="nw")
+            lbl_header = tk.Label(list_option, text="Is the violation {}".format(active_violation), font="Helvetica 10 bold").grid(column=0, row=0, columnspan=2, sticky="nw")
 
             lbl = tk.Label(list_option, text = "Confirmation:", font="Helvetica 10").grid(column=0, row=1)
 
-            options = ttk.Combobox(list_option, values=listbox_options)
+            options = ttk.Combobox(list_option, values=["True", "False"])
 
             options.grid(column=1, row=1)
 
             btn_watch = tk.Button(list_option, text="Watch Video", font="Helvetica 10", bg="#9bb", bd=0, relief="solid")
-            btn_edit = tk.Button(list_option, text="Edit", bg="#345", fg="#fff", width=8, font="Helvetica 10")
+            btn_edit = tk.Button(list_option, text="Edit", bg="#345", fg="#fff", width=8, font="Helvetica 10", command=tp.destroy)
 
             btn_watch.grid(column=2, row=1, padx=10, ipadx=2)
             btn_edit.grid(column=2, row=2, padx=10, ipadx=2)

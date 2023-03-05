@@ -8,6 +8,7 @@ import cv2
 
 class Window1:
     button_font = ("Arial", 14)
+    button_color = "#345"
 
     def __init__(self, parent, title = "Window 1", width = 1100, height = 600):
         self.root = parent
@@ -70,23 +71,23 @@ class Window1:
         self.img1_large = ImageTk.PhotoImage(Image.open("video.png").resize([560, 560], Image.BILINEAR))
 
         # Large display setup
-        self.canv_big = tk.Canvas(self.display_frame_large, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
+        self.canv_big = tk.Canvas(self.display_frame_large, bd=0, bg="black", relief="solid", highlightbackground="#aaa", highlightthickness=2)
         self.canv_big.bind("<Button-1>", lambda event : self.displayCamGrid())
         self.canv_big.pack(padx=10, pady=10, fill="both", expand=True)
 
         # UI Frame setup
-        self.btn1 = tk.Button(self.ui_frame, text="NOTIFICATION", font=self.button_font, bd=1, relief="solid", foreground="#333", command=self.ShowNotification) 
-        self.btn2 = tk.Button(self.ui_frame, text="HISTORY", font=self.button_font, bd=1, relief="solid", foreground="#333", command=self.ShowHistory)
-        self.btn3 = tk.Button(self.ui_frame, text="MENU", font=self.button_font, bd=1, relief="solid", foreground="#333", command=self.ShowMenu)
+        self.btn1 = tk.Button(self.ui_frame, text="NOTIFICATION", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowNotification) 
+        self.btn2 = tk.Button(self.ui_frame, text="HISTORY", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowHistory)
+        self.btn3 = tk.Button(self.ui_frame, text="MENU", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowMenu)
 
         self.btn1.pack(padx=2, pady=2, ipadx=20, anchor="n", side="top", fill="x")
         self.btn2.pack(padx=2, pady=2, ipadx=20, anchor="n", side="top", fill="x")
-        self.btn3.pack(padx=2, pady=2, ipadx=20, anchor="e", side="bottom")
+        self.btn3.pack(padx=20, pady=2, ipadx=20, anchor="e", side="bottom")
 
         #  Window Frames Deployment
         self.container_frame.pack(padx=0, pady=0, fill="both", expand=True)
         self.display_frame.pack(padx=10, pady=10, fill="both", expand=True)
-        self.display_frame_cover.grid(column=0, row=0, padx=10, pady=20, sticky="nw")
+        self.display_frame_cover.grid(column=0, row=0, padx=10, pady=20, sticky="news")
         self.ui_frame.pack(padx=20, pady=10, fill="both", expand=True)
         self.ui_frame_cover.grid(column=1, row=0, padx=0, pady=0, ipadx=10, ipady=0, sticky="news")
 
@@ -100,7 +101,6 @@ class Window1:
 
     def show(self):
         self.update()
-        # self.root.mainloop()
     
     def update(self):
         if(self.vid1.grab_frame() and self.vid2.grab_frame() and self.vid3.grab_frame() and self.vid4.grab_frame()):
@@ -108,7 +108,6 @@ class Window1:
             ret2, frame2 = self.vid2.retrieve_frame()
             ret3, frame3 = self.vid3.retrieve_frame()
             ret4, frame4 = self.vid4.retrieve_frame()
-            self.display_frame.update()
             if ret1:
                 self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
                 self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
@@ -151,7 +150,7 @@ class Window1:
                     height, width, channels = framel.shape
                     self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
                     self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-150, image=self.photo_large, anchor=tk.CENTER)
-                    self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="CAMERA {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
+                    self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="Cam {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
         else:
             pass
         
@@ -176,20 +175,6 @@ class Window1:
         print("Notification Clicked!")
 
         self.display_frame_cover.update()
-
-        # if self.display_frame.winfo_manager():
-        #     self.display_frame.grid_forget()
-        # elif self.display_frame_large.winfo_manager():
-        #     self.display_frame_large.grid_forget()
-        # elif self.history_frame.winfo_manager():
-        #     self.history_frame.grid_forget()
-
-        # if not self.notification_frame.winfo_manager():
-        #     self.notification_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
-        # else:
-        #     self.notification_frame.grid_forget()
-        #     self.display_frame_large.grid_forget()
-        #     self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
         if self.display_frame.winfo_manager():
             self.display_frame.pack_forget()
         elif self.display_frame_large.winfo_manager():
@@ -200,10 +185,10 @@ class Window1:
         if not self.notification_frame.winfo_manager():
             self.notification_frame.pack(padx=10, pady=10, fill="both", expand=True)
         else:
+            self.history_frame.pack_forget()
             self.notification_frame.pack_forget()
             self.display_frame_large.pack_forget()
             self.display_frame.pack(padx=40, pady=20, fill="both", expand=True)
-
 
     def ShowHistory(self):
         print("History Clicked!")
@@ -221,8 +206,9 @@ class Window1:
             self.history_frame.pack(padx=10, pady=10, fill="both", expand=True)
         else:
             self.history_frame.pack_forget()
+            self.notification_frame.pack_forget()
             self.display_frame_large.pack_forget()
-            self.display_frame.pack(padx=40, pady=20, fill="Both", expand=True)
+            self.display_frame.pack(padx=40, pady=20, fill="both", expand=True)
 
     def ShowMenu(self):
         print("Menu Clicked!")
@@ -241,8 +227,11 @@ class Window1:
             self.menu_btn.configure(command=command)
 
     def displayCamGrid(self):
-        # self.display_frame_large.grid_forget()
-        # self.display_frame.grid(column=0, row=0, padx=10, pady=20, sticky="news")
+        self.canv1.delete("all")
+        self.canv2.delete("all")
+        self.canv3.delete("all")
+        self.canv4.delete("all")
+
         self.display_frame_large.pack_forget()
         self.display_frame.pack(padx=10, pady=20, fill="both", expand=True)
 
