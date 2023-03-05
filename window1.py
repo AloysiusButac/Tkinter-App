@@ -26,15 +26,17 @@ class Window1:
         self.set_record = False
 
         # Main Window Frames
-        self.container_frame = tk.Frame(self.root)
+        self.container_frame = tk.Frame(self.root, bg="#9bb")
         self.container_frame.columnconfigure(0, weight=10, minsize=(width-100)*0.8//1)
         self.container_frame.columnconfigure(1, weight=1, minsize=(width-100)*0.2//1)
         self.container_frame.rowconfigure(0, weight=1, minsize=height-50)
-        self.display_frame = tk.Frame(self.container_frame)
-        self.display_frame_large = tk.Frame(self.container_frame)
-        self.ui_frame = tk.Frame(self.container_frame)
-        self.notification_frame = NotificationWindow(self.container_frame).get_window()
-        self.history_frame = HistoryWindow(self.container_frame).get_window()
+        self.display_frame_cover = tk.Frame(self.container_frame, bg="#9bb") # COVER
+        self.display_frame = tk.Frame(self.display_frame_cover, bg="#9bb")
+        self.display_frame_large = tk.Frame(self.display_frame_cover, bg="#9bb")
+        self.ui_frame_cover = tk.Frame(self.container_frame, bg="#345") # COVER
+        self.ui_frame = tk.Frame(self.ui_frame_cover, bg="#345")
+        self.notification_frame = NotificationWindow(self.display_frame_cover).get_window()
+        self.history_frame = HistoryWindow(self.display_frame_cover).get_window()
 
         # Menu Window setup
         self.MenuWindow = Toplevel(self.root)
@@ -51,10 +53,10 @@ class Window1:
         self.display_frame.rowconfigure(1, weight=1)
 
         ## Create Canvas grid
-        self.canv1 = tk.Canvas(self.display_frame, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
-        self.canv2 = tk.Canvas(self.display_frame, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
-        self.canv3 = tk.Canvas(self.display_frame, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
-        self.canv4 = tk.Canvas(self.display_frame, bd=0, relief="solid", highlightbackground="#aaa", highlightthickness=2)
+        self.canv1 = tk.Canvas(self.display_frame, bd=0, bg="black", relief="solid", highlightbackground="#aaa", highlightthickness=2)
+        self.canv2 = tk.Canvas(self.display_frame, bd=0, bg="black", relief="solid", highlightbackground="#aaa", highlightthickness=2)
+        self.canv3 = tk.Canvas(self.display_frame, bd=0, bg="black", relief="solid", highlightbackground="#aaa", highlightthickness=2)
+        self.canv4 = tk.Canvas(self.display_frame, bd=0, bg="black", relief="solid", highlightbackground="#aaa", highlightthickness=2)
         self.canv1.bind("<Button-1>", lambda event: self.displayCamZoom(1))
         self.canv2.bind("<Button-1>", lambda event: self.displayCamZoom(2))
         self.canv3.bind("<Button-1>", lambda event: self.displayCamZoom(3))
@@ -82,9 +84,11 @@ class Window1:
         self.btn3.pack(padx=2, pady=2, ipadx=20, anchor="e", side="bottom")
 
         #  Window Frames Deployment
-        self.container_frame.pack(padx=10, pady=10, fill="both", expand=True)
-        self.display_frame.grid(column=0, row=0, padx=10, pady=20, sticky="nw")
-        self.ui_frame.grid(column=1, row=0, padx=10, pady=30, sticky="news")
+        self.container_frame.pack(padx=0, pady=0, fill="both", expand=True)
+        self.display_frame.pack(padx=10, pady=10, fill="both", expand=True)
+        self.display_frame_cover.grid(column=0, row=0, padx=10, pady=20, sticky="nw")
+        self.ui_frame.pack(padx=20, pady=10, fill="both", expand=True)
+        self.ui_frame_cover.grid(column=1, row=0, padx=0, pady=0, ipadx=10, ipady=0, sticky="news")
 
         self.display_frame.update()
         self.display_frame_large.update_idletasks()
@@ -171,40 +175,54 @@ class Window1:
     def ShowNotification(self):
         print("Notification Clicked!")
 
-        self.container_frame.update()
+        self.display_frame_cover.update()
 
+        # if self.display_frame.winfo_manager():
+        #     self.display_frame.grid_forget()
+        # elif self.display_frame_large.winfo_manager():
+        #     self.display_frame_large.grid_forget()
+        # elif self.history_frame.winfo_manager():
+        #     self.history_frame.grid_forget()
+
+        # if not self.notification_frame.winfo_manager():
+        #     self.notification_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+        # else:
+        #     self.notification_frame.grid_forget()
+        #     self.display_frame_large.grid_forget()
+        #     self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
         if self.display_frame.winfo_manager():
-            self.display_frame.grid_forget()
+            self.display_frame.pack_forget()
         elif self.display_frame_large.winfo_manager():
-            self.display_frame_large.grid_forget()
+            self.display_frame_large.pack_forget()
         elif self.history_frame.winfo_manager():
-            self.history_frame.grid_forget()
+            self.history_frame.pack_forget()
 
         if not self.notification_frame.winfo_manager():
-            self.notification_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+            self.notification_frame.pack(padx=10, pady=10, fill="both", expand=True)
         else:
-            self.notification_frame.grid_forget()
-            self.display_frame_large.grid_forget()
-            self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
+            self.notification_frame.pack_forget()
+            self.display_frame_large.pack_forget()
+            self.display_frame.pack(padx=40, pady=20, fill="both", expand=True)
+
 
     def ShowHistory(self):
         print("History Clicked!")
 
-        self.container_frame.update()
+        self.display_frame_cover.update()
 
         if self.display_frame.winfo_manager():
-            self.display_frame.grid_forget()
+            self.display_frame.pack_forget()
         elif self.display_frame_large.winfo_manager():
-            self.display_frame_large.grid_forget()
+            self.display_frame_large.pack_forget()
         elif self.notification_frame.winfo_manager():
-            self.notification_frame.grid_forget()
+            self.notification_frame.pack_forget()
 
         if not self.history_frame.winfo_manager():
-            self.history_frame.grid(column=0, row=0, padx=10, pady=10, sticky="news")
+            self.history_frame.pack(padx=10, pady=10, fill="both", expand=True)
         else:
-            self.history_frame.grid_forget()
-            self.display_frame_large.grid_forget()
-            self.display_frame.grid(column=0, row=0, padx=40, pady=20, sticky="nw")
+            self.history_frame.pack_forget()
+            self.display_frame_large.pack_forget()
+            self.display_frame.pack(padx=40, pady=20, fill="Both", expand=True)
 
     def ShowMenu(self):
         print("Menu Clicked!")
@@ -223,8 +241,10 @@ class Window1:
             self.menu_btn.configure(command=command)
 
     def displayCamGrid(self):
-        self.display_frame_large.grid_forget()
-        self.display_frame.grid(column=0, row=0, padx=10, pady=20, sticky="news")
+        # self.display_frame_large.grid_forget()
+        # self.display_frame.grid(column=0, row=0, padx=10, pady=20, sticky="news")
+        self.display_frame_large.pack_forget()
+        self.display_frame.pack(padx=10, pady=20, fill="both", expand=True)
 
     def displayCamZoom(self, cam_index=0):
         self.canv_big.delete("all")
@@ -241,8 +261,8 @@ class Window1:
             self.active_stream = 1
             return
 
-        self.display_frame.grid_forget()
-        self.display_frame_large.grid(column=0, row=0, padx=10, pady=20, sticky="nwes")
+        self.display_frame.pack_forget()
+        self.display_frame_large.pack(padx=10, pady=20, fill="both", expand=True)
 
     def CreateNotificationPill(self, parent, imgpath="", title="title", message="Notification message", width=500, height=100, font=None, side="top"):
         container = tk.Frame(parent, bd=2)
