@@ -108,25 +108,25 @@ class Window1:
             if ret1:
                 self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
                 self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
-                self.canv1.create_text(self.canvas1_wh[0]-70, self.canvas1_wh[1]-10, text="CAMERA 1", fill="white", font=("Arial 15 bold"))
+                self.canv1.create_text(40, self.canvas1_wh[1]-10, text="Cam 1", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid1)
             if ret2:
                 self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
                 self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
-                self.canv2.create_text(self.canvas2_wh[0]-70, self.canvas2_wh[1]-10, text="CAMERA 2", fill="white", font=("Arial 15 bold"))
+                self.canv2.create_text(40, self.canvas2_wh[1]-10, text="Cam 2", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid2)
             if ret3:
                 self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
                 self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
-                self.canv3.create_text(self.canvas3_wh[0]-70, self.canvas3_wh[1]-10, text="CAMERA 3", fill="white", font=("Arial 15 bold"))
+                self.canv3.create_text(40, self.canvas3_wh[1]-10, text="Cam 3", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid3)
             if ret4:
                 self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
                 self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
-                self.canv4.create_text(self.canvas4_wh[0]-70, self.canvas4_wh[1]-10, text="CAMERA 4", fill="white", font=("Arial 15 bold"))
+                self.canv4.create_text(40, self.canvas4_wh[1]-10, text="Cam 4", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid4)
             
@@ -147,7 +147,7 @@ class Window1:
                     height, width, channels = framel.shape
                     self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
                     self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-150, image=self.photo_large, anchor=tk.CENTER)
-                    self.canv_big.create_text(self.canv_big.winfo_width()-100, self.canv_big.winfo_height()-20, text="CAMERA {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
+                    self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="CAMERA {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
         else:
             pass
         
