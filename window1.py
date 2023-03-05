@@ -233,7 +233,7 @@ class Window1:
         self.canv4.delete("all")
 
         self.display_frame_large.pack_forget()
-        self.display_frame.pack(padx=10, pady=20, fill="both", expand=True)
+        self.display_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
     def displayCamZoom(self, cam_index=0):
         self.canv_big.delete("all")
