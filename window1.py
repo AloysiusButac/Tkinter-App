@@ -147,7 +147,7 @@ class Window1:
                     height, width, channels = framel.shape
                     self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
                     self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-150, image=self.photo_large, anchor=tk.CENTER)
-                    self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="CAMERA {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
+                    self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="Cam {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
         else:
             pass
         

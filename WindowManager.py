@@ -10,7 +10,9 @@ class WindowManager:
         self.root = parent
 
         self.main_window = window_app.Window1(self.root)
-    
+        logo = tk.PhotoImage(file = "BantAI.png")
+        self.root.iconphoto(False, logo)
+
     def OpenWindow1(self):
         self.main_window.SetStream1(MyVideoCapture(0))
         self.main_window.SetStream2(MyVideoCapture("2.gif", name="test2"))
