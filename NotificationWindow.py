@@ -79,17 +79,18 @@ class NotificationWindow:
             list_option.rowconfigure(2, weight=2)
 
             listbox_options = ["Standing", "Walking", "Kicking", "Running", "Intimidating", "Striking"]
+            active_violation = "Standing"
 
-            lbl_header = tk.Label(list_option, text="Is the violation {}".format(listbox_options[2]), font="Helvetica 12 bold").grid(column=0, row=0, columnspan=2, sticky="nw")
+            lbl_header = tk.Label(list_option, text="Is the violation {}".format(active_violation), font="Helvetica 10 bold").grid(column=0, row=0, columnspan=2, sticky="nw")
 
             lbl = tk.Label(list_option, text = "Confirmation:", font="Helvetica 10").grid(column=0, row=1)
 
-            options = ttk.Combobox(list_option, values=listbox_options)
+            options = ttk.Combobox(list_option, values=["True", "False"])
 
             options.grid(column=1, row=1)
 
             btn_watch = tk.Button(list_option, text="Watch Video", font="Helvetica 10", bg="#9bb", bd=0, relief="solid")
-            btn_edit = tk.Button(list_option, text="Edit", bg="#345", fg="#fff", width=8, font="Helvetica 10")
+            btn_edit = tk.Button(list_option, text="Edit", bg="#345", fg="#fff", width=8, font="Helvetica 10", command=tp.destroy)
 
             btn_watch.grid(column=2, row=1, padx=10, ipadx=2)
             btn_edit.grid(column=2, row=2, padx=10, ipadx=2)
