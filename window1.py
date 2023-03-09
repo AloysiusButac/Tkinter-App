@@ -4,9 +4,10 @@ from VideoCapture import *
 from tkinter import Toplevel
 from NotificationWindow import *
 from HistoryWindow import *
+from Util import *
 import cv2
 
-class Window1:
+class MainWindow:
     button_font = ("Arial", 14)
     button_color = "#345"
 
@@ -76,10 +77,16 @@ class Window1:
         self.canv_big.pack(padx=10, pady=10, fill="both", expand=True)
 
         # UI Frame setup
+        logo_wh = (125, 125)
+        self.logo_big = ImageTk.PhotoImage(Image.open("BantAI.png").resize([logo_wh[0], logo_wh[1]], Image.BILINEAR))
+        # self.ui_logo = tk.Canvas(self.ui_frame, bd=0, bg="#345", height=125)
+        self.ui_logo = tk.Canvas(self.ui_frame, bd=0, bg="#345", highlightthickness=0, height=125, relief="solid")
+
         self.btn1 = tk.Button(self.ui_frame, text="NOTIFICATION", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowNotification) 
         self.btn2 = tk.Button(self.ui_frame, text="HISTORY", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowHistory)
         self.btn3 = tk.Button(self.ui_frame, text="MENU", font=self.button_font, bd=0, bg=self.button_color, relief="solid", foreground="white", command=self.ShowMenu)
 
+        self.ui_logo.pack(padx=2, pady=2, ipadx=20, anchor="n", side="top", fill="x")
         self.btn1.pack(padx=2, pady=2, ipadx=20, anchor="n", side="top", fill="x")
         self.btn2.pack(padx=2, pady=2, ipadx=20, anchor="n", side="top", fill="x")
         self.btn3.pack(padx=20, pady=2, ipadx=20, anchor="e", side="bottom")
@@ -92,6 +99,7 @@ class Window1:
         self.ui_frame_cover.grid(column=1, row=0, padx=0, pady=0, ipadx=10, ipady=0, sticky="news")
 
         self.display_frame.update()
+        self.ui_frame.update()
         self.display_frame_large.update_idletasks()
         self.canvas1_wh = [self.canv1.winfo_width(), self.canv1.winfo_height()]
         self.canvas2_wh = [self.canv2.winfo_width(), self.canv2.winfo_height()]
@@ -99,33 +107,39 @@ class Window1:
         self.canvas4_wh = [self.canv4.winfo_width(), self.canv4.winfo_height()]
         self.canvasbig_wh = [self.canv_big.winfo_width(), self.canv_big.winfo_height()] 
 
+        self.ui_logo.create_image((self.ui_frame.winfo_width()//2), logo_wh[1]//2, image=self.logo_big, anchor=tk.CENTER)
+
+
     def show(self):
         self.update()
     
     def update(self):
         if(self.vid1.grab_frame() and self.vid2.grab_frame() and self.vid3.grab_frame() and self.vid4.grab_frame()):
             ret1, frame1 = self.vid1.retrieve_frame()
-            ret2, frame2 = self.vid2.retrieve_frame()
-            ret3, frame3 = self.vid3.retrieve_frame()
-            ret4, frame4 = self.vid4.retrieve_frame()
             if ret1:
                 self.photo1 = ImageTk.PhotoImage(image=Image.fromarray(frame1).resize((self.canvas1_wh[0], self.canvas1_wh[1]), Image.BILINEAR))
                 self.canv1.create_image(self.canvas1_wh[0]//2, self.canvas1_wh[1]//2, image=self.photo1, anchor=tk.CENTER)
                 self.canv1.create_text(40, self.canvas1_wh[1]-10, text="Cam 1", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid1)
+
+            ret2, frame2 = self.vid2.retrieve_frame()
             if ret2:
                 self.photo2 = ImageTk.PhotoImage(image=Image.fromarray(frame2).resize((self.canvas2_wh[0], self.canvas2_wh[1]), Image.BILINEAR))
                 self.canv2.create_image(self.canvas2_wh[0]//2, self.canvas2_wh[1]//2, image=self.photo2, anchor=tk.CENTER)
                 self.canv2.create_text(40, self.canvas2_wh[1]-10, text="Cam 2", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid2)
+
+            ret3, frame3 = self.vid3.retrieve_frame()
             if ret3:
                 self.photo3 = ImageTk.PhotoImage(image=Image.fromarray(frame3).resize((self.canvas3_wh[0], self.canvas3_wh[1]), Image.BILINEAR))
                 self.canv3.create_image(self.canvas3_wh[0]//2, self.canvas3_wh[1]//2, image=self.photo3, anchor=tk.CENTER)
                 self.canv3.create_text(40, self.canvas3_wh[1]-10, text="Cam 3", fill="white", font=("Arial 15 bold"))
                 if self.set_record:
                     self.RecordStream(self.vid3)
+
+            ret4, frame4 = self.vid4.retrieve_frame()
             if ret4:
                 self.photo4 = ImageTk.PhotoImage(image=Image.fromarray(frame4).resize((self.canvas4_wh[0], self.canvas4_wh[1]), Image.BILINEAR))
                 self.canv4.create_image(self.canvas4_wh[0]//2, self.canvas4_wh[1]//2, image=self.photo4, anchor=tk.CENTER)
@@ -148,11 +162,9 @@ class Window1:
 
                 if retl:
                     height, width, channels = framel.shape
-                    self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(self.ScaleDimensions((width, height)), Image.BILINEAR))
+                    self.photo_large = ImageTk.PhotoImage(image=Image.fromarray(framel).resize(Util.ScaleDimensions((width, height)), Image.BILINEAR))
                     self.canv_big.create_image(self.canv_big.winfo_width()//2, self.canv_big.winfo_width()//2-150, image=self.photo_large, anchor=tk.CENTER)
                     self.canv_big.create_text(100, self.canv_big.winfo_height()-20, text="Cam {}".format(enlarged_frame_id), fill="white", font=("Arial 20 bold"))
-        else:
-            pass
         
         self.root.after(self.delay, self.update)
 
@@ -175,11 +187,11 @@ class Window1:
         print("Notification Clicked!")
 
         self.display_frame_cover.update()
-        if self.display_frame.winfo_manager():
-            self.display_frame.pack_forget()
-        elif self.display_frame_large.winfo_manager():
+        if self.display_frame.winfo_manager():  # If camera grid is displayed ...
+            self.display_frame.pack_forget() 
+        elif self.display_frame_large.winfo_manager():  # If large camera is displayed ...
             self.display_frame_large.pack_forget()
-        elif self.history_frame.winfo_manager():
+        elif self.history_frame.winfo_manager():  # If notification is displayed ...
             self.history_frame.pack_forget()
 
         if not self.notification_frame.winfo_manager():
@@ -188,18 +200,18 @@ class Window1:
             self.history_frame.pack_forget()
             self.notification_frame.pack_forget()
             self.display_frame_large.pack_forget()
-            self.display_frame.pack(padx=40, pady=20, fill="both", expand=True)
+            self.display_frame.pack(padx=40, pady=10, fill="both", expand=True)
 
     def ShowHistory(self):
         print("History Clicked!")
 
         self.display_frame_cover.update()
 
-        if self.display_frame.winfo_manager():
+        if self.display_frame.winfo_manager(): # If camera grid is displayed ...
             self.display_frame.pack_forget()
-        elif self.display_frame_large.winfo_manager():
+        elif self.display_frame_large.winfo_manager(): # If large camera is displayed ...
             self.display_frame_large.pack_forget()
-        elif self.notification_frame.winfo_manager():
+        elif self.notification_frame.winfo_manager(): # If history is displayed ...
             self.notification_frame.pack_forget()
 
         if not self.history_frame.winfo_manager():
@@ -208,7 +220,7 @@ class Window1:
             self.history_frame.pack_forget()
             self.notification_frame.pack_forget()
             self.display_frame_large.pack_forget()
-            self.display_frame.pack(padx=40, pady=20, fill="both", expand=True)
+            self.display_frame.pack(padx=40, pady=10, fill="both", expand=True)
 
     def ShowMenu(self):
         print("Menu Clicked!")
@@ -217,9 +229,6 @@ class Window1:
 
         tmp = tk.Label(self.MenuWindow, text="Menu shows up here.")
         tmp.pack(padx=20, pady=20)
-
-        # self.menu_btn = tk.Button(self.MenuWindow, text='Window 2')
-        # self.menu_btn.pack(padx=10, pady=10)
     
     def setMenuButtonCommand(self, command):
         self.MenuWindow.update()
@@ -252,42 +261,3 @@ class Window1:
 
         self.display_frame.pack_forget()
         self.display_frame_large.pack(padx=10, pady=20, fill="both", expand=True)
-
-    def CreateNotificationPill(self, parent, imgpath="", title="title", message="Notification message", width=500, height=100, font=None, side="top"):
-        container = tk.Frame(parent, bd=2)
-        # lbl_title = tk.Label(container, text=title)
-        lbl_message = tk.Label(container, text="{}: {}".format(title, message))
-        # canv = tk.Canvas(container, height=40, width=40, bd=0, highlightbackground="#222", highlightthickness=2)
-        
-        # lbl_title.pack(padx=20, pady=0, side=side)
-        lbl_message.pack(padx=20, pady=0, side=side)
-        # canv.pack(padx=2, pady=2, side="left")
-
-        return container
-
-    def CreateHistoryPill(self, parent, imgpath="", title="title", width=500, height=100, font=None, side="top"):
-        container = tk.Frame(parent, bd=2)
-        container.columnconfigure(0, weight=1)
-        container.columnconfigure(1, weight=10)
-        container.rowconfigure(0, weight=1)
-        lbl_message = tk.Label(container, text="{}".format(title))
-        canv = tk.Canvas(container, height=40, width=40, bd=0, highlightbackground="#222", highlightthickness=2)
-        
-        lbl_message.grid(padx=20, column=1, row=0, sticky="news")
-        canv.grid(padx=10, column=0, row=0, sticky="news")
-
-        return container
-
-    def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
-        m = dim2[0] / dim1[0]
-        n = dim2[1] / dim1[1]
-        if (m < n):
-            return (int(dim1[0] * m), int(dim1[1] * m))
-        else:
-            return (int(dim1[0] * n), int(dim1[1] * n))
-
-    def rescale_frame(frame, percent=75):
-        width = int(frame.shape[1] * percent/ 100)
-        height = int(frame.shape[0] * percent/ 100)
-        dim = (width, height)
-        return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
