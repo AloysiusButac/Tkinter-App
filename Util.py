@@ -14,7 +14,7 @@ class Util:
 
         return container
 
-    def CreateHistoryPill(self, parent, imgpath="", title="title", width=500, height=100, font=None, side="top"):
+    def CreateHistoryPill(parent, imgpath="", title="title", width=500, height=100, font=None, side="top"):
         container = tk.Frame(parent, bd=2)
         container.columnconfigure(0, weight=1)
         container.columnconfigure(1, weight=10)
@@ -27,7 +27,7 @@ class Util:
 
         return container
 
-    def ScaleDimensions(self, dim1=(338, 266), dim2=(704, 540)):
+    def ScaleDimensions(dim1=(338, 266), dim2=(704, 540)):
         m = dim2[0] / dim1[0]
         n = dim2[1] / dim1[1]
         if (m < n):
@@ -41,7 +41,7 @@ class Util:
         dim = (width, height)
         return cv2.resize(frame, dim, interpolation =cv2.INTER_AREA)
 
-    def CreateStatPill(self, parent, image, title="Pill", width=500, height=50, font=None, value=""):
+    def CreateStatPill(parent, image, title="Pill", width=500, height=50, font=None, value=""):
         container = tk.Frame(parent, bg="#fff", bd=2, highlightbackground="#222", highlightthickness=1)
         lbl = tk.Label(container, text=title, font=("Arial 12"), bg="#fff")
         canv = tk.Canvas(container, height=50, width=50, bd=0, bg="#fff", highlightbackground="#222", highlightthickness=0)
@@ -52,7 +52,7 @@ class Util:
         lbl.pack(padx=20, pady=0, side="left")
         return container
 
-    def CreateDataPill(self, parent, image, title="Pill", width=500, height=100, font=None, side="top"):
+    def CreateDataPill(parent, image, title="Pill", width=500, height=100, font=None, side="top"):
         container = tk.Frame(parent, highlightbackground="#222", highlightthickness=1, bg="#fff")
         container.columnconfigure(0, weight=1)
         container.rowconfigure(0, weight=1)
@@ -68,7 +68,7 @@ class Util:
 
         return container
 
-    def CreateButtonArray(self, parent, count=0, titles=[], commands=[], anchor="left"):
+    def CreateButtonArray(parent, count=0, titles=[], commands=[], anchor="left"):
         output = []
         for i in range(count):
             output.append(tk.Button(parent, text=titles[i], font=("Arial 12"), bd=1, bg="#fff", relief="solid", foreground="#333"))

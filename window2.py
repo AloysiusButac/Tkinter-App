@@ -14,14 +14,15 @@ class Window2(tk.Frame):
     def __init__(self, parent, title = "Window 2", width = 1200, height = 600):
         super().__init__(parent)
 
-        self.root = tk.Frame(parent)
+        self.root = tk.Frame(parent, bg="#fff")
         window_w = width
         window_h = height
-        if isinstance(parent, tk.Tk):
-            pos_x = (parent.winfo_screenwidth() // 2) - (window_w // 2)
-            pos_y = (parent.winfo_screenheight() // 2) - (window_h // 2) - 50
-            # self.root.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
-            # self.root.title(title)
+        if isinstance(parent, tk.Tk) or isinstance(parent, tk.Toplevel):
+            # pos_x = (parent.winfo_screenwidth() // 2) - (window_w // 2)
+            # pos_y = (parent.winfo_screenheight() // 2) - (window_h // 2) - 50
+            pos_x, pos_y = 0, 0
+            parent.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
+            parent.title(title)
             # self.root.resizable(0, 0)
 
         self.root.columnconfigure(0, weight=2, minsize=240)
@@ -51,12 +52,9 @@ class Window2(tk.Frame):
         sidebar_frame.rowconfigure(3, weight=2)
         # Image & Buttons
         img = tk.Canvas(sidebar_frame, bd=1, bg="#fff", relief="solid", height=200, width=230)
-        # img = tk.Canvas(sidebar_frame, height=200, width=230)
-        self.sidebar_image = ImageTk.PhotoImage(Image.open("video.png").resize([200, 200], Image.BILINEAR))
-        img.create_image(115, 100, anchor=tk.CENTER, image=self.sidebar_image)
-        # btn_container = tk.Frame(sidebar_frame, bg="#aaa", bd=1, relief="solid")
+        self.sidebar_image = ImageTk.PhotoImage(Image.open("BantAI.png").resize([200, 200], Image.BILINEAR))
         btn_container = tk.Frame(sidebar_frame, bg="#fff")
-        side_btns = self.CreateButtonArray(btn_container, 3, ["Button"] * 3, anchor="top")
+        side_btns = Util.CreateButtonArray(parent=btn_container, count=3, titles=["Button"] * 3, anchor="top")
         for b in side_btns:
             b.pack(ipady=10, padx=5, pady=0, fill="x", expand=True)
 
@@ -97,6 +95,10 @@ class Window2(tk.Frame):
         img.grid(column=0, row=0, padx=0, pady=0, sticky="news")
         btn_container.grid(column=0, row=1, padx=5, pady=10, sticky="new")
         connection_status_frame.grid(column=0, row=3, padx=10, pady=0, sticky="news")
+
+        
+        sidebar_frame.update()
+        img.create_image(img.winfo_width()//2, img.winfo_height()//2, anchor=tk.CENTER, image=self.sidebar_image)
 
         """
                                  Main Panel 
@@ -141,9 +143,9 @@ class Window2(tk.Frame):
 
         self.default_image = ImageTk.PhotoImage(Image.open("video.png").resize([50, 50], Image.BILINEAR))
 
-        rbncanv_1 = self.CreateStatPill(rbnfrme_stat, self.default_image, title="Anomally Detecter")
-        rbncanv_2 = self.CreateStatPill(rbnfrme_stat, self.default_image, title="Audio Detected")
-        rbncanv_3 = self.CreateStatPill(rbnfrme_stat, self.default_image, title="Total Detection")
+        rbncanv_1 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Anomally Detecter")
+        rbncanv_2 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Audio Detecter")
+        rbncanv_3 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Total Detecter")
 
         rbncanv_1.pack(padx=10, pady=0, fill="x", expand=True, side="left")
         rbncanv_2.pack(padx=10, pady=0, fill="x", expand=True, side="left")
@@ -162,11 +164,11 @@ class Window2(tk.Frame):
         self.pill_img1 = ImageTk.PhotoImage(Image.open("graph.png").resize([400, 100], Image.BILINEAR))
         self.pill_img2 = ImageTk.PhotoImage(Image.open("graph2.png").resize([140, 280], Image.BILINEAR))
 
-        data_canv1 = self.CreateDataPill(data_frame_canvases_detected, self.pill_img1, "Anomaly Detected")
-        data_canv2 = self.CreateDataPill(data_frame_canvases_detected, self.pill_img1, "Audio Detected")
+        data_canv1 = Util.CreateDataPill(parent=data_frame_canvases_detected, image=self.pill_img1, title="Anomaly Detected")
+        data_canv2 = Util.CreateDataPill(parent=data_frame_canvases_detected, image=self.pill_img1, title="Audio Detected")
 
-        data_canv3 = self.CreateDataPill(data_frame_canvases_recent, self.pill_img2, "Recent Anomaly\nDetected", side="top", width=170, height=350)
-        data_canv4 = self.CreateDataPill(data_frame_canvases_recent, self.pill_img2, "Recent Audio\nDetected", side="top", width=170, height=350)
+        data_canv3 = Util.CreateDataPill(parent=data_frame_canvases_recent, image=self.pill_img2, title="Recent Anomaly\nDetected", side="top", width=170, height=350)
+        data_canv4 = Util.CreateDataPill(parent=data_frame_canvases_recent, image=self.pill_img2, title="Recent Audio\nDetected", side="top", width=170, height=350)
 
         data_canv1.pack(padx=20, pady=10, side="top")
         data_canv2.pack(padx=20, pady=10, side="top")
@@ -176,12 +178,12 @@ class Window2(tk.Frame):
         data_frame_canvases_recent.grid(column=1, row=0, padx=10, pady=0, sticky="news")
 
         data_frame_canvases_buttons = tk.Frame(data_frame_canvases, bg="#fff")
-        data_buttons = self.CreateButtonArray(data_frame_canvases_buttons, 3, ["Button"]*3)
+        data_buttons = Util.CreateButtonArray(data_frame_canvases_buttons, 3, ["Button"]*3)
         for btn in data_buttons:
             btn.pack(padx=5, pady=5, ipadx=15, ipady=0, side="left")
         data_frame_canvases_buttons.grid(column=0, row=1, padx=10, pady=0, sticky="news")
         
-        data_button_far_right = self.CreateButtonArray(data_frame_canvases, 1, ["Button"], anchor="right")
+        data_button_far_right = Util.CreateButtonArray(data_frame_canvases, 1, ["Button"], anchor="right")
         data_button_far_right[0].grid(column=1, row=1, padx=10, pady=0, ipadx=15, ipady=0, sticky="e")
 
         # Data frame internal frame positioning
@@ -196,9 +198,14 @@ class Window2(tk.Frame):
         # Positioning frames within window
         sidebar_frame.grid(column=0, row=0, columnspan=1, rowspan=1, padx=0, pady=0, sticky="news")
         data_frame.grid(column=1, row=0, columnspan=2, rowspan=1, padx=0, pady=0, sticky="news")
+
+        self.root.pack(fill="both", expand=True)
     
     def show(self):
         self.root.mainloop()
 
+    def get_window(self):
+        return self
+
     def closeWindow(self):
-        self.root.close()
+        self.root.close()        self.root.close()

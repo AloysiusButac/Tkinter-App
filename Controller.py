@@ -20,6 +20,7 @@ class Controller:
 
         self.state = State.WINDOW1
         self.viewManager.OpenWindow1()
+        self.viewManager.OpenWindow2()
     
     def show(self):
         self.master.mainloop()
