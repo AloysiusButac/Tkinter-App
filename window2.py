@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter.ttk import Separator, Style
 from PIL import ImageTk, Image
+from Util import *
 
 # https://www.activestate.com/resources/quick-reads/how-to-add-images-in-tkinter/
 # https://www.c-sharpcorner.com/blogs/basics-for-displaying-image-in-tkinter-python
@@ -201,43 +202,3 @@ class Window2(tk.Frame):
 
     def closeWindow(self):
         self.root.close()
-    
-    def CreateStatPill(self, parent, image, title="Pill", width=500, height=50, font=None, value=""):
-        # container = tk.Frame(parent, bg="#7ef", bd=2)
-        container = tk.Frame(parent, bg="#fff", bd=2, highlightbackground="#222", highlightthickness=1)
-        lbl = tk.Label(container, text=title, font=self.font, bg="#fff")
-        canv = tk.Canvas(container, height=50, width=50, bd=0, bg="#fff", highlightbackground="#222", highlightthickness=0)
-
-        canv.create_image(0, 0, anchor=tk.NW, image=image)
-        
-        canv.pack(padx=2, pady=2, side="left")
-        lbl.pack(padx=20, pady=0, side="left")
-
-        return container
-
-    def CreateDataPill(self, parent, image, title="Pill", width=500, height=100, font=None, side="top"):
-        container = tk.Frame(parent, highlightbackground="#222", highlightthickness=1, bg="#fff")
-        container.columnconfigure(0, weight=1)
-        container.rowconfigure(0, weight=1)
-        container.rowconfigure(1, weight=1)
-
-        lbl = tk.Label(container, text=title, font=self.font, bg="#fff")
-        # canv = tk.Canvas(container, height=height, width=width, bd=0, highlightbackground="#222", highlightthickness=2)
-        canv = tk.Canvas(container, height=height, width=width, bg="#fff", highlightbackground="#fff")
-
-        canv.create_image(width//2, height//2, anchor=tk.CENTER, image=image)
-        
-        # lbl.pack(padx=20, pady=0, side=side)
-        # canv.pack(padx=2, pady=2, side=side)
-        lbl.grid(column=0, row=0, padx=20, pady=0, sticky="nw")
-        canv.grid(column=0, row=1, padx=2, pady=2, sticky="nw")
-
-        return container
-
-    def CreateButtonArray(self, parent, count=0, titles=[], commands=[], anchor="left"):
-        output = []
-        for i in range(count):
-            output.append(tk.Button(parent, text=titles[i], font=self.button_font, bd=1, bg="#fff", relief="solid", foreground="#333"))
-
-        return output
-
