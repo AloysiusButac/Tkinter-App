@@ -1,3 +1,4 @@
+import tkinter as tk
 import Window_App as win
 
 class DataModel:
@@ -12,7 +13,7 @@ class App(tk.Tk):
         self.title('Tkinter MVC Demo')
 
         window_manager = win.WindowManager(self)
-        # window_manager.setLogo(self.logo)
+        window_manager.setLogo(self.logo)
         model = DataModel()
 
         self.controller = win.Controller(self, model, window_manager)

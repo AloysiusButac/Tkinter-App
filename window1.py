@@ -24,7 +24,6 @@ class MainWindow:
         
         self.active_stream = 1
         self.delay = 41             # 24 fps frame delay
-        self.vid_large = MyVideoCapture(0) 
         self.set_record = False
 
         # Main Window Frames
@@ -47,6 +46,8 @@ class MainWindow:
         self.MenuWindow.withdraw()
         self.menu_btn = tk.Button(self.MenuWindow, text='Window2')
         self.menu_btn.pack(padx=10, pady=10)
+        ## Makes the menu close button hide instead of destroy the window
+        self.MenuWindow.protocol("WM_DELETE_WINDOW", self.MenuWindow.withdraw)
 
         # Display Frame setup
         self.display_frame.columnconfigure(0, weight=1)
@@ -78,7 +79,7 @@ class MainWindow:
 
         # UI Frame setup
         logo_wh = (125, 125)
-        self.logo_big = ImageTk.PhotoImage(Image.open("BantAI.png").resize([logo_wh[0], logo_wh[1]], Image.BILINEAR))
+        self.logo_big = ImageTk.PhotoImage(Image.open(self.root.logo).resize([logo_wh[0], logo_wh[1]], Image.BILINEAR))
         # self.ui_logo = tk.Canvas(self.ui_frame, bd=0, bg="#345", height=125)
         self.ui_logo = tk.Canvas(self.ui_frame, bd=0, bg="#345", highlightthickness=0, height=125, relief="solid")
 
@@ -224,11 +225,7 @@ class MainWindow:
 
     def ShowMenu(self):
         print("Menu Clicked!")
-
         self.MenuWindow.deiconify()
-
-        tmp = tk.Label(self.MenuWindow, text="Menu shows up here.")
-        tmp.pack(padx=20, pady=20)
     
     def setMenuButtonCommand(self, command):
         self.MenuWindow.update()

@@ -9,8 +9,6 @@ class WindowManager:
         print("Window manager created!")
         self.root = parent
 
-        self.setLogo("BantAI.png")
-
         self.main_window = window_app.MainWindow(self.root)
 
     def OpenWindow1(self):
@@ -24,13 +22,14 @@ class WindowManager:
     def OpenWindow2(self):
         # Create window 2
         self.second_window = Toplevel(self.root)
-        self.second_window.geometry("{}x{}+{}+{}".format(self.root.winfo_width(), self.root.winfo_height(), 100, 100))
+        self.pos_x = (self.root.winfo_screenwidth() // 2) - (1100 // 2)
+        self.pos_y = (self.root.winfo_screenheight() // 2) - (600 // 2) - 50
+        self.second_window.geometry("{}x{}+{}+{}".format(1100, 600, self.pos_x, self.pos_y))
         self.second_window.title("Window2")
         # Create window 2 content
         self.second_window_frame = window_app.Window2(self.second_window).get_window()
         self.second_window_frame.pack(fill="both", expand=True)
         # Change Logo
-        self.second_window.iconphoto(False, self.logo)
 
         print('Window2 opened.')
 

@@ -23,7 +23,6 @@ class Window2(tk.Frame):
             pos_x, pos_y = 0, 0
             parent.geometry('{}x{}+{}+{}'.format(window_w, window_h, pos_x, pos_y))
             parent.title(title)
-            # self.root.resizable(0, 0)
 
         self.root.columnconfigure(0, weight=2, minsize=240)
         self.root.columnconfigure(1, weight=6)
@@ -50,7 +49,7 @@ class Window2(tk.Frame):
         sidebar_frame.rowconfigure(1, weight=3)
         sidebar_frame.rowconfigure(2, weight=1)
         sidebar_frame.rowconfigure(3, weight=2)
-        # Image & Buttons
+        # (1, 2) Image & Buttons
         img = tk.Canvas(sidebar_frame, bd=1, bg="#fff", relief="solid", height=200, width=230)
         self.sidebar_image = ImageTk.PhotoImage(Image.open("BantAI.png").resize([200, 200], Image.BILINEAR))
         btn_container = tk.Frame(sidebar_frame, bg="#fff")
@@ -58,7 +57,7 @@ class Window2(tk.Frame):
         for b in side_btns:
             b.pack(ipady=10, padx=5, pady=0, fill="x", expand=True)
 
-        # Connection Status panel
+        # (3) Connection Status panel
         # connection_status_frame = tk.Frame(sidebar_frame, bg="#bbb", bd=1, relief="solid")
         connection_status_frame = tk.Frame(sidebar_frame, bg="#fff")
         connection_status_frame.rowconfigure(0, weight=1)
@@ -96,9 +95,9 @@ class Window2(tk.Frame):
         btn_container.grid(column=0, row=1, padx=5, pady=10, sticky="new")
         connection_status_frame.grid(column=0, row=3, padx=10, pady=0, sticky="news")
 
-        
         sidebar_frame.update()
-        img.create_image(img.winfo_width()//2, img.winfo_height()//2, anchor=tk.CENTER, image=self.sidebar_image)
+        img.update()
+        img.create_image(img.winfo_width()//2, img.winfo_height()//2 + 100, anchor=tk.CENTER, image=self.sidebar_image)
 
         """
                                  Main Panel 
@@ -143,9 +142,9 @@ class Window2(tk.Frame):
 
         self.default_image = ImageTk.PhotoImage(Image.open("video.png").resize([50, 50], Image.BILINEAR))
 
-        rbncanv_1 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Anomally Detecter")
-        rbncanv_2 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Audio Detecter")
-        rbncanv_3 = Util.CreateStatPill(parent=rbnfrme_stat, image=self.default_image, title="Total Detecter")
+        rbncanv_1 = Util.CreateStatPill(rbnfrme_stat, self.default_image, title="Anomally Detecter")
+        rbncanv_2 = Util.CreateStatPill(rbnfrme_stat, self.default_image, title="Audio Detected")
+        rbncanv_3 = Util.CreateStatPill(rbnfrme_stat, self.default_image, title="Total Detection")
 
         rbncanv_1.pack(padx=10, pady=0, fill="x", expand=True, side="left")
         rbncanv_2.pack(padx=10, pady=0, fill="x", expand=True, side="left")
@@ -205,7 +204,7 @@ class Window2(tk.Frame):
         self.root.mainloop()
 
     def get_window(self):
-        return self
+        return self.root
 
     def closeWindow(self):
-        self.root.close()        self.root.close()
+        self.root.close()
